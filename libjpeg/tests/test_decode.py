@@ -10,11 +10,12 @@ import numpy as np
 try:
     import pydicom
     from pydicom.encaps import generate_pixel_data_frame
+    from . import handler
     HAS_PYDICOM = True
 except ImportError:
     HAS_PYDICOM = False
 
-from . import add_handler, remove_handler, handler
+from . import add_handler, remove_handler
 from libjpeg import decode
 from libjpeg.data import get_indexed_datasets, JPEG_DIRECTORY
 

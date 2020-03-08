@@ -1,5 +1,9 @@
 
-from . import pydicom_handler as handler
+try:
+    from . import pydicom_handler as handler
+except ImportError:
+    pass
+
 
 def add_handler():
     """Add the pixel data handler to *pydicom*.
