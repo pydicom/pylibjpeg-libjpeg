@@ -82,7 +82,7 @@ install:
 
 # Command to run tests
 script:
-    - python -m pytest --cov pylibjpeg-libjpeg
+    - python -m pytest --cov libjpeg
 
 after_success:
     # Upload coverage results to codecov.io
