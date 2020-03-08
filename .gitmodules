@@ -1,0 +1,3 @@
+[submodule "libjpeg/src/libjpeg"]
+	path = libjpeg/src/libjpeg
+	url = https://github.com/thorfdbg/libjpeg.git
