@@ -1,5 +1,5 @@
-[![codecov](https://codecov.io/gh/scaramallion/pylibjpeg-libjpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/pydicom/pylibjpeg)
-[![Build Status](https://travis-ci.org/scaramallion/pylibjpeg-libjpeg.svg?branch=master)](https://travis-ci.org/scaramallion/pylibjpeg-libjpeg)
+[![codecov](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/pydicom/pylibjpeg)
+[![Build Status](https://travis-ci.org/pydicom/pylibjpeg-libjpeg.svg?branch=master)](https://travis-ci.org/pydicom/pylibjpeg-libjpeg)
 
 ## pylibjpeg-libjpeg
 
