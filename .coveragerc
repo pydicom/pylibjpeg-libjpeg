@@ -1,8 +1,7 @@
 [run]
 omit =
-    pylibjpeg/tests/*
-    pylibjpeg/scripts/*
-    pylibjpeg/data/*
-    pylibjpeg/src/*
+    libjpeg/tests/*
+    libjpeg/scripts/*
+    libjpeg/src/*
     pydicom/*
     pydicom-master/*
