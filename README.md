@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/pydicom/pylibjpeg)
+[![codecov](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg)
 [![Build Status](https://travis-ci.org/pydicom/pylibjpeg-libjpeg.svg?branch=master)](https://travis-ci.org/pydicom/pylibjpeg-libjpeg)
 
 ## pylibjpeg-libjpeg
