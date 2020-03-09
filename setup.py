@@ -46,6 +46,7 @@ def get_mscv_args():
         '/GF-',  # Disable string pooling
         '/GR',  # Enable run-time type info
         '/RTC1',  # Enable run-time error checking
+        '/MT',  # Create multithreading executable
         # /D defines constants and macros
         '/D_UNICODE',
         '/DUNICODE',
