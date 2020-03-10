@@ -10,13 +10,14 @@ import numpy as np
 try:
     import pydicom
     from pydicom.encaps import generate_pixel_data_frame
+    from pydicom.pixel_data_handlers.util import reshape_pixel_array
     from . import handler
     HAS_PYDICOM = True
 except ImportError:
     HAS_PYDICOM = False
 
 from . import add_handler, remove_handler
-from libjpeg import decode
+from libjpeg import decode, decode_pixel_data
 from libjpeg.data import get_indexed_datasets, JPEG_DIRECTORY
 
 
@@ -100,11 +101,11 @@ def test_invalid_colourspace_warns():
     ds = index['JPEGBaseline_1s_1f_u_08_08.dcm']['ds']
     nr_frames = ds.get('NumberOfFrames', 1)
     frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
-    msg = (
-        r""
-    )
+    msg = r"no colour transformation will be applied"
     with pytest.warns(UserWarning, match=msg):
-        arr = decode(np.frombuffer(frame, 'uint8'), colourspace='ANY')
+        arr = decode_pixel_data(np.frombuffer(frame, 'uint8'), 'ANY')
+
+    arr = reshape_pixel_array(ds, arr)
 
     assert arr.flags.writeable
     assert 'uint8' == arr.dtype

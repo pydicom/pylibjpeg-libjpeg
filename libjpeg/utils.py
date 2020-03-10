@@ -52,7 +52,7 @@ LIBJPEG_ERROR_CODES = {
 }
 
 
-def decode(arr, colourspace='YBR_FULL', reshape=True):
+def decode(arr, colour_transform=0, reshape=True):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
 
     Parameters
@@ -60,9 +60,12 @@ def decode(arr, colourspace='YBR_FULL', reshape=True):
     arr : numpy.ndarray or bytes
         A 1D array of ``np.uint8``, or a Python :class:`bytes` object
         containing the encoded JPEG image.
-    colourspace : str, optional
-        One of ``'MONOCHROME1'``, ``'MONOCHROME2'``, ``'RGB'``, ``'YBR_FULL'``,
-        ``'YBR_FULL_422'``.
+    colour_transform : int, optional
+        The colour transform used, one of:
+        | ``0`` : No transform applied (default)
+        | ``1`` : RGB to YCbCr
+        | ``2`` : JPEG-LS pseudo RCT or RCT
+        | ``3`` : Freeform
     reshape : bool, optional
         Reshape and review the output array so it matches the image data
         (default), otherwise return a 1D array of ``np.uint8``.
@@ -77,28 +80,10 @@ def decode(arr, colourspace='YBR_FULL', reshape=True):
     RuntimeError
         If the decoding failed.
     """
-    colours = {
-        'MONOCHROME1': 0,
-        'MONOCHROME2' : 0,
-        'RGB' : 1,
-        'YBR_FULL' : 0,
-        'YBR_FULL_422' : 0,
-        -1 : -1,  # For unit testing only
-    }
-
-    try:
-        transform = colours[colourspace]
-    except KeyError:
-        warnings.warn(
-            "Unsupported colour space '{}', no colour transform will "
-            "be applied".format(colourspace)
-        )
-        transform = 0
-
     if isinstance(arr, bytes):
         arr = np.frombuffer(arr, 'uint8')
 
-    status, out, params = _libjpeg.decode(arr, transform)
+    status, out, params = _libjpeg.decode(arr, colour_transform)
     status = status.decode("utf-8")
     code, msg = status.split("::::")
     code = int(code)
@@ -126,6 +111,49 @@ def decode(arr, colourspace='YBR_FULL', reshape=True):
         "Unknown error code '{}' returned from Decode(): {}"
         .format(code, msg)
     )
+
+
+def decode_pixel_data(arr, photometric_interp):
+    """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
+
+    Parameters
+    ----------
+    arr : numpy.ndarray or bytes
+        A 1D array of ``np.uint8``, or a Python :class:`bytes` object
+        containing the encoded JPEG image.
+    photometric_interp : str
+        The (0028,0004) *Photometric Interpretation* of the pixel data, one of
+        ``'MONOCHROME1'``, ``'MONOCHROME2'``, ``'RGB'``, ``'YBR_FULL'``,
+        ``'YBR_FULL_422'``.
+
+    Returns
+    -------
+    numpy.ndarray
+        A 1D array of ``numpy.uint8`` containing the decoded image data.
+
+    Raises
+    ------
+    RuntimeError
+        If the decoding failed.
+    """
+    colours = {
+        'MONOCHROME1': 0,
+        'MONOCHROME2' : 0,
+        'RGB' : 1,
+        'YBR_FULL' : 0,
+        'YBR_FULL_422' : 0,
+    }
+
+    try:
+        transform = colours[photometric_interp]
+    except KeyError:
+        warnings.warn(
+            "Unsupported (0028,0004) Photometric Interpretation '{}', no "
+            "colour transformation will be applied".format(photometric_interp)
+        )
+        transform = 0
+
+    return decode(arr, transform, reshape=False)
 
 
 def get_parameters(arr):
