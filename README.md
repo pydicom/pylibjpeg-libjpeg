@@ -10,6 +10,13 @@ plugin for [pylibjpeg](http://github.com/pydicom/pylibjpeg).
 Linux, OSX and Windows are all supported.
 
 ### Installation
+#### Dependencies
+[NumPy](http://numpy.org)
+
+#### Installing the current release
+```bash
+pip install pylibjpeg-libjpeg
+```
 #### Installing the development version
 
 Make sure [Python](https://www.python.org/) and [Git](https://git-scm.com/) are installed. For Windows, you also need to install
@@ -20,6 +27,7 @@ python -m pip install pylibjpeg-libjpeg
 ```
 
 ### Supported JPEG Formats
+#### Decoding
 
 | ISO/IEC Standard | ITU Equivalent | JPEG Format |
 | --- | --- | --- |
@@ -27,8 +35,11 @@ python -m pip install pylibjpeg-libjpeg
 | [14495](https://www.iso.org/standard/22397.html)   | [T.87](https://www.itu.int/rec/T-REC-T.87/en) | [JPEG-LS](https://jpeg.org/jpegls/index.html) |
 | [18477](https://www.iso.org/standard/62552.html)   | | [JPEG XT](https://jpeg.org/jpegxt/) |
 
-### Supported Transfer Syntaxes
+#### Encoding
+Encoding of JPEG images is not currently supported
 
+### Supported Transfer Syntaxes
+#### Decoding
 | UID | Description |
 | --- | --- |
 | 1.2.840.10008.1.2.4.50 | JPEG Baseline (Process 1) |
@@ -40,7 +51,6 @@ python -m pip install pylibjpeg-libjpeg
 
 ### Usage
 #### With pylibjpeg and pydicom
-Assuming you already have *pylibjpeg* and *pydicom* installed:
 
 ```python
 from pydicom import dcmread

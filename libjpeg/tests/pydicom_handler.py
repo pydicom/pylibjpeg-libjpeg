@@ -25,7 +25,7 @@ from pydicom.uid import (
     JPEGLSLossy,
 )
 
-from libjpeg import decode
+from libjpeg import decode_pixel_data
 
 
 HANDLER_NAME = 'libjpeg-test'
@@ -138,6 +138,6 @@ def get_pixeldata(ds):
     for frame, offset in zip(generate_frames, generate_offsets):
         # Encoded JPG data to be sent to the decoder
         frame = np.frombuffer(frame, np.uint8)
-        arr[offset:offset + frame_len] = decode(frame, p_interp, reshape=False)
+        arr[offset:offset + frame_len] = decode_pixel_data(frame, p_interp)
 
     return arr.view(pixel_dtype(ds))
