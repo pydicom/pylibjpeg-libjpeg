@@ -193,8 +193,8 @@ setup(
     include_package_data = True,
     zip_safe = False,
     python_requires = ">=3.6",
-    setup_requires = ['setuptools>=18.0', 'cython', 'numpy'],
-    install_requires = ["numpy"],
+    setup_requires = ['setuptools>=18.0', 'cython', 'numpy>=1.16.0'],
+    install_requires = ["numpy>=1.16.0"],
     cmdclass = {'build': build},
     ext_modules = extensions,
 )
