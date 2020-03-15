@@ -1,6 +1,17 @@
 
+import sys
+
 try:
     from . import pydicom_handler as handler
+except ImportError:
+    pass
+
+# Add the testing data to libjpeg (if available)
+try:
+    import data as _data
+    globals()['data'] = _data
+    # Add to cache - needed for pytest
+    sys.modules['libjpeg.data'] = _data
 except ImportError:
     pass
 

@@ -56,11 +56,17 @@ Encoding of JPEG images is not currently supported
 from pydicom import dcmread
 from pydicom.data import get_testdata_file
 
+import pylibjpeg
+
 ds = dcmread(get_testdata_file('JPEG-LL.dcm'))
 arr = ds.pixel_array
 ```
 
-#### Standalone
+#### Standalone JPEG decoding
+
+You can also decode JPEG images to a [numpy ndarray][1]:
+
+[1]: https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html
 
 ```python
 from libjpeg import decode
