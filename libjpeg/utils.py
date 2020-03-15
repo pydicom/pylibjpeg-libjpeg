@@ -67,7 +67,7 @@ def decode(arr, colour_transform=0, reshape=True):
         | ``2`` : JPEG-LS pseudo RCT or RCT
         | ``3`` : Freeform
     reshape : bool, optional
-        Reshape and review the output array so it matches the image data
+        Reshape and re-view the output array so it matches the image data
         (default), otherwise return a 1D array of ``np.uint8``.
 
     Returns
@@ -115,6 +115,8 @@ def decode(arr, colour_transform=0, reshape=True):
 
 def decode_pixel_data(arr, photometric_interp):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
+
+    Intended for use with *pydicom* ``Dataset`` objects.
 
     Parameters
     ----------

@@ -163,28 +163,24 @@ setup(
     license = "GPL V3.0",
     keywords = (
         "dicom pydicom python medicalimaging radiotherapy oncology imaging "
-        "jpg jpeg jpg-ls jpeg-ls libjpeg pylibjpeg"
+        "radiology nuclearmedicine jpg jpeg jpg-ls jpeg-ls libjpeg pylibjpeg"
     ),
-    project_urls = {
-        # Might give it it's own docs eventually
-        'Documentation' : 'https://pydicom.github.io/pydicom/'
-    },
     classifiers = [
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Intended Audience :: Developers",
         "Intended Audience :: Healthcare Industry",
         "Intended Audience :: Science/Research",
-        "Development Status :: 3 - Alpha",
+        #"Development Status :: 3 - Alpha",
         #"Development Status :: 4 - Beta",
-        #"Development Status :: 5 - Production/Stable",
+        "Development Status :: 5 - Production/Stable",
         "Natural Language :: English",
         "Programming Language :: C++",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Operating System :: MacOS :: MacOS X",  # Tested OK
-        "Operating System :: POSIX :: Linux",  # Tested OK
-        "Operating System :: Microsoft :: Windows",  # Tested OK
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: Microsoft :: Windows",
         "Topic :: Scientific/Engineering :: Medical Science Apps.",
         "Topic :: Software Development :: Libraries",
     ],
