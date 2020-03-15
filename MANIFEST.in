@@ -1,1 +1,1 @@
-recursive-include pylibjpeg/src *
+recursive-include libjpeg/src *
