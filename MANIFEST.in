@@ -1,1 +1,3 @@
 recursive-include libjpeg/src *
+exclude libjpeg/src/config.log
+exclude libjpeg/src/config.status
