@@ -120,9 +120,11 @@ if platform.system() == 'Windows':
     )
     extra_compile_args = get_mscv_args()
 elif platform.system() in ['Darwin', 'Linux']:
-    opts = get_gcc_args()
-    extra_compile_args += opts['ADDOPTS']
-    extra_link_args += opts['EXTRA_LIBS']
+    # Skip configuration if running with `sdist`
+    if 'sdist' not in sys.argv:
+        opts = get_gcc_args()
+        extra_compile_args += opts['ADDOPTS']
+        extra_link_args += opts['EXTRA_LIBS']
 
 
 extensions = [
