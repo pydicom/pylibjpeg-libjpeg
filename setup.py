@@ -195,4 +195,8 @@ setup(
     install_requires = ["numpy>=1.16.0"],
     cmdclass = {'build': build},
     ext_modules = extensions,
+    # Plugin registrations
+    entry_points={
+        'pylibjpeg.plugins': 'libjpeg = libjpeg',
+    },
 )
