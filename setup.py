@@ -197,6 +197,14 @@ setup(
     ext_modules = extensions,
     # Plugin registrations
     entry_points={
-        'pylibjpeg.plugins': 'libjpeg = libjpeg',
+        'pylibjpeg.pixel_data_decoders': [
+            "1.2.840.10008.1.2.4.50 = libjpeg:decode_pixel_data",
+            "1.2.840.10008.1.2.4.51 = libjpeg:decode_pixel_data",
+            "1.2.840.10008.1.2.4.57 = libjpeg:decode_pixel_data",
+            "1.2.840.10008.1.2.4.70 = libjpeg:decode_pixel_data",
+            "1.2.840.10008.1.2.4.80 = libjpeg:decode_pixel_data",
+            "1.2.840.10008.1.2.4.81 = libjpeg:decode_pixel_data",
+        ],
+        'pylibjpeg.jpeg_decoders': 'libjpeg = libjpeg:decode',
     },
 )
