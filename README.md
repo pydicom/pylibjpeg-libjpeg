@@ -1,5 +1,5 @@
 [![codecov](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg)
-[![Build Status](https://travis-ci.org/pydicom/pylibjpeg-libjpeg.svg?branch=master)](https://travis-ci.org/pydicom/pylibjpeg-libjpeg)
+[![Build Status](https://github.com/pydicom/pylibjpeg-libjpeg/workflows/build/badge.svg)](https://github.com/pydicom/pylibjpeg-libjpeg/actions?query=workflow%3Abuild)
 [![PyPI version](https://badge.fury.io/py/pylibjpeg-libjpeg.svg)](https://badge.fury.io/py/pylibjpeg-libjpeg)
 [![Python versions](https://img.shields.io/pypi/pyversions/pylibjpeg-libjpeg.svg)](https://img.shields.io/pypi/pyversions/pylibjpeg-libjpeg.svg)
 
