@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+
 
 jobs:
   windows:
@@ -115,7 +115,7 @@ jobs:
       run: |
         pip uninstall -y pydicom
         pip install git+https://github.com/pydicom/pydicom
-        pytest --cov libjpeg 
+        pytest --cov libjpeg
 
     - name: Send coverage results
       if: ${{ success() }}
