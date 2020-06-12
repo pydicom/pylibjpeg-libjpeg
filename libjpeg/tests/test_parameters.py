@@ -77,8 +77,8 @@ def test_get_parameters_bytes():
     info = (257, 255, 4, 8)
 
     assert (info[0], info[1]) == (params['rows'], params['columns'])
-    assert info[2] == params['samples_per_pixel']
-    assert info[3] == params['bits_per_sample']
+    assert info[2] == params["nr_components"]
+    assert info[3] == params["precision"]
 
 
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
@@ -128,8 +128,8 @@ class TestGetParametersDCM(object):
         params = get_parameters(np.frombuffer(frame, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_DCM['1.2.840.10008.1.2.4.51'])
     def test_extended(self, fname, info):
@@ -142,8 +142,8 @@ class TestGetParametersDCM(object):
         params = get_parameters(np.frombuffer(frame, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_DCM['1.2.840.10008.1.2.4.57'])
     def test_lossless(self, fname, info):
@@ -156,8 +156,8 @@ class TestGetParametersDCM(object):
         params = get_parameters(np.frombuffer(frame, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_DCM['1.2.840.10008.1.2.4.70'])
     def test_lossless_sv1(self, fname, info):
@@ -170,8 +170,8 @@ class TestGetParametersDCM(object):
         params = get_parameters(np.frombuffer(frame, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_DCM['1.2.840.10008.1.2.4.80'])
     def test_extended(self, fname, info):
@@ -184,8 +184,8 @@ class TestGetParametersDCM(object):
         params = get_parameters(np.frombuffer(frame, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_DCM['1.2.840.10008.1.2.4.81'])
     def test_extended(self, fname, info):
@@ -198,8 +198,8 @@ class TestGetParametersDCM(object):
         params = get_parameters(np.frombuffer(frame, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
 
 REF_JPG = {
@@ -264,8 +264,8 @@ class TestGetParametersJPG(object):
         params = get_parameters(np.frombuffer(data, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_JPG['10918']['p2'])
     def test_extended_p2(self, fname, info):
@@ -277,8 +277,8 @@ class TestGetParametersJPG(object):
         params = get_parameters(np.frombuffer(data, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_JPG['10918']['p4'])
     def test_extended_p4(self, fname, info):
@@ -290,8 +290,8 @@ class TestGetParametersJPG(object):
         params = get_parameters(np.frombuffer(data, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_JPG['10918']['p14'])
     def test_lossless_p14(self, fname, info):
@@ -303,8 +303,8 @@ class TestGetParametersJPG(object):
         params = get_parameters(np.frombuffer(data, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]
 
     @pytest.mark.parametrize("fname, info", REF_JPG['14495']['JLS'])
     def test_jls(self, fname, info):
@@ -316,5 +316,5 @@ class TestGetParametersJPG(object):
         params = get_parameters(np.frombuffer(data, 'uint8'))
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
-        assert info[2] == params['samples_per_pixel']
-        assert info[3] == params['bits_per_sample']
+        assert info[2] == params["nr_components"]
+        assert info[3] == params["precision"]

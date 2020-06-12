@@ -87,15 +87,16 @@ def decode(arr, colour_transform=0, reshape=True):
     status = status.decode("utf-8")
     code, msg = status.split("::::")
     code = int(code)
+    print(params)
 
     if code == 0 and reshape is True:
-        bpp = ceil(params['bits_per_sample'] / 8)
+        bpp = ceil(params["precision"] / 8)
         if bpp == 2:
             out = out.view('uint16')
 
         shape = [params['rows'], params['columns']]
-        if params['samples_per_pixel'] > 1:
-            shape.append(params['samples_per_pixel'])
+        if params["nr_components"] > 1:
+            shape.append(params["nr_components"])
 
         return out.reshape(*shape)
     elif code == 0 and reshape is False:
@@ -181,8 +182,8 @@ def get_parameters(arr):
     -------
     dict
         A :class:`dict` containing JPEG image parameters with keys including
-        ``'rows'``, ``'columns'``, ``'samples_per_pixel'`` and
-        ``'bits_per_sample'``.
+        ``'rows'``, ``'columns'``, ``"nr_components"`` and
+        ``"precision"``.
 
     Raises
     ------
