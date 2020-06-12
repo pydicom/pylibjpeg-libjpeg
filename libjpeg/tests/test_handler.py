@@ -300,6 +300,8 @@ class TestJPEGBaseline(HandlerTestBase):
         assert 'uint8' == arr.dtype
         assert (ds.NumberOfFrames, ds.Rows, ds.Columns, 3) == arr.shape
 
+        # Gives a MemoryError in GitHub CI build otherwise
+        arr = arr[0:10, ...]
         arr = convert_color_space(arr, 'YBR_FULL', 'RGB')
 
         #self.plot(arr, index=3)
