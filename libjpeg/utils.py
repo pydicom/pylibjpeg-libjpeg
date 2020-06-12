@@ -113,7 +113,7 @@ def decode(arr, colour_transform=0, reshape=True):
     )
 
 
-def decode_pixel_data(arr, photometric_interp):
+def decode_pixel_data(arr, ds):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
 
     Intended for use with *pydicom* ``Dataset`` objects.
@@ -123,10 +123,12 @@ def decode_pixel_data(arr, photometric_interp):
     arr : numpy.ndarray or bytes
         A 1D array of ``np.uint8``, or a Python :class:`bytes` object
         containing the encoded JPEG image.
-    photometric_interp : str
-        The (0028,0004) *Photometric Interpretation* of the pixel data, one of
-        ``'MONOCHROME1'``, ``'MONOCHROME2'``, ``'RGB'``, ``'YBR_FULL'``,
-        ``'YBR_FULL_422'``.
+    ds : pydicom.dataset.Dataset
+        A :class:`~pydicom.dataset.Dataset` containing the group ``0x0028``
+        elements corresponding to the *Pixel Data*. Must contain a
+        (0028,0004) *Photometric Interpretation* element with the colour
+        space of the pixel data, one of ``'MONOCHROME1'``, ``'MONOCHROME2'``,
+        ``'RGB'``, ``'YBR_FULL'``, ``'YBR_FULL_422'``.
 
     Returns
     -------
@@ -145,6 +147,14 @@ def decode_pixel_data(arr, photometric_interp):
         'YBR_FULL' : 0,
         'YBR_FULL_422' : 0,
     }
+
+    if 'PhotometricInterpretation' not in ds:
+        raise ValueError(
+            "The (0028,0004) Photometric Interpretation element is missing "
+            "from the dataset"
+        )
+
+    photometric_interp = ds.PhotometricInterpretation
 
     try:
         transform = colours[photometric_interp]
