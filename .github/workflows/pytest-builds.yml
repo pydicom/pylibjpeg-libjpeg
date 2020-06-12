@@ -104,14 +104,13 @@ jobs:
 
     - name: Run pytest
       run: |
-        pytest --cov libjpeg
+        pytest --cov=libjpeg
 
     - name: Install pydicom release and rerun pytest
       run: |
         pip install pydicom
-        pytest --cov libjpeg
+        pytest --cov=libjpeg --cov-append
         ls .
-        ls ../
 
     # - name: Switch to pydicom dev and rerun pytest
     #   run: |

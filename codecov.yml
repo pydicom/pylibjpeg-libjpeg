@@ -12,9 +12,5 @@ coverage:
         threshold: 0.1%
 
 ignore:
-  - "pylibjpeg/tests"
-  - "pylibjpeg/src"
-  - "pylibjpeg/scripts"
-  - "pylibjpeg/data"
-  - "pydicom-master"
-  - "pydicom"
+  - "libjpeg/tests"
+  - "libjpeg/src"
