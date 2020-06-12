@@ -110,15 +110,16 @@ jobs:
       run: |
         pip install pydicom
         pytest --cov libjpeg
-
-    - name: Switch to pydicom dev and rerun pytest
-      run: |
-        pip uninstall -y pydicom
-        pip install git+https://github.com/pydicom/pydicom
-        pytest --cov libjpeg
         ls .
+        ls ../
+
+    # - name: Switch to pydicom dev and rerun pytest
+    #   run: |
+    #     pip uninstall -y pydicom
+    #     pip install git+https://github.com/pydicom/pydicom
+    #     pytest --cov libjpeg
 
     - uses: codecov/codecov-action@v1
       name: Upload coverage results
       with:
-        file: ./coverage.xml
+        file: ../coverage.xml
