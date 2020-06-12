@@ -206,5 +206,7 @@ setup(
             "1.2.840.10008.1.2.4.81 = libjpeg:decode_pixel_data",
         ],
         'pylibjpeg.jpeg_decoders': 'libjpeg = libjpeg:decode',
+        'pylibjpeg.jpeg_ls_decoders': 'libjpeg = libjpeg:decode',
+        'pylibjpeg.jpeg_xt_decoders': 'libjpeg = libjpeg:decode',
     },
 )

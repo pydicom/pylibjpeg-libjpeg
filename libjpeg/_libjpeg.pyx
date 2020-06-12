@@ -64,9 +64,9 @@ def decode(np.ndarray[np.uint8_t, ndim=1] input_buffer, colourspace):
     cdef char *pInput = <char *>np.PyArray_DATA(input_buffer)
 
     # Create array for output and get pointer to first element
-    bpp = ceil(param['bits_per_sample'] / 8)
+    bpp = ceil(param['precision'] / 8)
     nr_bytes = (
-        param['rows'] * param['columns'] * param['samples_per_pixel'] * bpp
+        param['rows'] * param['columns'] * param['nr_components'] * bpp
     )
     output_buffer = np.zeros(nr_bytes, dtype=np.uint8)
     cdef char *pOutput = <char *>np.PyArray_DATA(output_buffer)
@@ -118,8 +118,8 @@ def get_parameters(np.ndarray[np.uint8_t, ndim=1] input_buffer):
     parameters = {
         'rows' : param.rows,
         'columns' : param.columns,
-        'samples_per_pixel' : param.samples_per_pixel,
-        'bits_per_sample' : param.bits_per_sample,
+        'nr_components' : param.samples_per_pixel,
+        'precision' : param.bits_per_sample,
     }
 
     return status, parameters
