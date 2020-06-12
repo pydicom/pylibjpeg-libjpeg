@@ -102,8 +102,9 @@ def test_invalid_colourspace_warns():
     nr_frames = ds.get('NumberOfFrames', 1)
     frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
     msg = r"no colour transformation will be applied"
+    ds.PhotometricInterpretation = 'ANY'
     with pytest.warns(UserWarning, match=msg):
-        arr = decode_pixel_data(np.frombuffer(frame, 'uint8'), 'ANY')
+        arr = decode_pixel_data(np.frombuffer(frame, 'uint8'), ds)
 
     arr = reshape_pixel_array(ds, arr)
 
