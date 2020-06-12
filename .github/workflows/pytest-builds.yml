@@ -120,3 +120,5 @@ jobs:
 
     - uses: codecov/codecov-action@v1
       name: Upload coverage results
+      with:
+        file: .coverage
