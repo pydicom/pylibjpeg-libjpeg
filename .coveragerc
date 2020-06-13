@@ -1,7 +1,4 @@
 [run]
 omit =
     libjpeg/tests/*
-    libjpeg/scripts/*
     libjpeg/src/*
-    pydicom/*
-    pydicom-master/*

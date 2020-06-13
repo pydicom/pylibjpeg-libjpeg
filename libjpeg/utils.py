@@ -87,7 +87,6 @@ def decode(arr, colour_transform=0, reshape=True):
     status = status.decode("utf-8")
     code, msg = status.split("::::")
     code = int(code)
-    print(params)
 
     if code == 0 and reshape is True:
         bpp = ceil(params["precision"] / 8)
