@@ -2,3 +2,6 @@
 
 1.1.0
 =====
+
+* Updated to pylibjpeg v1.1 interface
+* Changed the dict keys returned by ``get_parameters()``
