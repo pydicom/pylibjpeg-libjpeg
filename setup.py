@@ -51,6 +51,9 @@ def get_mscv_args():
         '/D_UNICODE',
         '/DUNICODE',
     ]
+    if sys.version_info.major == 3 and sys.version_info.minor >= 9:
+        flags.remove('/wd"4335"')
+        
     # Set the architecture based on system architecture and Python
     is_x64 = platform.architecture()[0] == '64bit'
     if is_x64 and sys.maxsize > 2**32:
