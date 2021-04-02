@@ -1,8 +1,13 @@
 name: release wheels
 
 on:
+  push:
+    branches:
+      - main
+  pull_request:
   release:
-    types: [ published ]
+    types:
+      - published
 
 jobs:
   build_wheels:
