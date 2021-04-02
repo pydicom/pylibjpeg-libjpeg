@@ -3,7 +3,7 @@ name: release wheels
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
   release:
     types:
