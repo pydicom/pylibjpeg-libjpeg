@@ -17,6 +17,7 @@ jobs:
       CIBW_BUILD: "cp3*-*"
       CIBW_SKIP: "cp35-*"
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.9]
