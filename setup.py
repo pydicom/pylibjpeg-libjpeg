@@ -53,7 +53,7 @@ def get_mscv_args():
     ]
     if sys.version_info.major == 3 and sys.version_info.minor >= 9:
         flags.remove('/wd"4335"')
-        
+
     # Set the architecture based on system architecture and Python
     is_x64 = platform.architecture()[0] == '64bit'
     if is_x64 and sys.maxsize > 2**32:
@@ -108,7 +108,7 @@ def get_source_files():
         os.path.join(INTERFACE_SRC, 'streamhook.cpp'),
     ]
     for fname in Path(LIBJPEG_SRC).glob('*/*'):
-        if '.cpp' in str(fname):
+        if fname.suffix == '.cpp':
             source_files.append(str(fname))
 
     return source_files
@@ -164,7 +164,7 @@ setup(
     version = __version__,
     author = "scaramallion",
     author_email = "scaramallion@users.noreply.github.com",
-    url = "https://github.com/scaramallion/pylibjpeg-libjpeg",
+    url = "https://github.com/pydicom/pylibjpeg-libjpeg",
     license = "GPL V3.0",
     keywords = (
         "dicom pydicom python medicalimaging radiotherapy oncology imaging "
@@ -183,6 +183,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
         "Operating System :: Microsoft :: Windows",

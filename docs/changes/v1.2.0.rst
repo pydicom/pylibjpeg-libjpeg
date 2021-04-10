@@ -1,0 +1,18 @@
+.. _v1.2.0:
+
+1.2.0
+=====
+
+Changes
+.......
+
+* Added support for Python 3.9
+* Removed ``_config`` module
+
+
+Enhancements
+............
+
+* Add support for passing the path to the JPEG file to
+  :func:`~libjpeg.utils.decode` and :func:`~libjpeg.utils.get_parameters`
+  as either :class:`str` or :class:`pathlib.Path`

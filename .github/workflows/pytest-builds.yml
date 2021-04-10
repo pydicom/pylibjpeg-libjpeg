@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
         arch: ['x64', 'x86']
 
     steps:
@@ -29,6 +29,7 @@ jobs:
 
     - name: Install package and dependencies
       run: |
+        python --version
         python -m pip install -U pip
         python -m pip install pytest cython numpy
         python -m pip install . -v
@@ -40,7 +41,8 @@ jobs:
 
     - name: Install pydicom release and rerun pytest
       run: |
-        pip install pydicom
+        pip install pydicom pylibjpeg
+        pip uninstall -y pylibjpeg-openjpeg
         pytest
 
   osx:
@@ -49,7 +51,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -63,7 +65,9 @@ jobs:
 
     - name: Install package and dependencies
       run: |
+        python --version
         python -m pip install -U pip
+        python -m pip install cython numpy
         python -m pip install . -v
         python -m pip install pytest
         python -m pip install git+https://github.com/pydicom/pylibjpeg-data
@@ -74,7 +78,8 @@ jobs:
 
     - name: Install pydicom release and rerun pytest
       run: |
-        pip install pydicom
+        pip install pydicom pylibjpeg
+        pip uninstall -y pylibjpeg-openjpeg
         pytest
 
   ubuntu:
@@ -83,7 +88,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -97,7 +102,9 @@ jobs:
 
     - name: Install package and dependencies
       run: |
+        python --version
         python -m pip install -U pip
+        python -m pip install cython numpy
         python -m pip install .
         python -m pip install pytest coverage pytest-cov
         python -m pip install git+https://github.com/pydicom/pylibjpeg-data
@@ -108,7 +115,8 @@ jobs:
 
     - name: Install pydicom release and rerun pytest
       run: |
-        pip install pydicom
+        pip install pydicom pylibjpeg
+        pip uninstall -y pylibjpeg-openjpeg
         pytest --cov=libjpeg --cov-append libjpeg/tests
 
     - name: Switch to pydicom dev and rerun pytest

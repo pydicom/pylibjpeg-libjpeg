@@ -2,6 +2,7 @@
 
 from io import BytesIO
 import os
+from pathlib import Path
 import pytest
 import warnings
 
@@ -11,18 +12,16 @@ try:
     import pydicom
     from pydicom.encaps import generate_pixel_data_frame
     from pydicom.pixel_data_handlers.util import reshape_pixel_array
-    from . import handler
     HAS_PYDICOM = True
 except ImportError:
     HAS_PYDICOM = False
 
-from . import add_handler, remove_handler
 from libjpeg import decode, decode_pixel_data
 from libjpeg.data import get_indexed_datasets, JPEG_DIRECTORY
 
 
-DIR_10918 = os.path.join(JPEG_DIRECTORY, '10918')
-DIR_14495 = os.path.join(JPEG_DIRECTORY, '14495')
+DIR_10918 = JPEG_DIRECTORY / '10918'
+DIR_14495 = JPEG_DIRECTORY / '14495'
 
 
 REF_DCM = {
@@ -67,7 +66,7 @@ REF_DCM = {
 }
 
 
-# TODO: convert to using straight JPG data
+# TODO: convert using straight JPG data
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
 def test_decode_bytes():
     """Test decode using bytes."""
@@ -541,3 +540,18 @@ class TestDecodeJPG(object):
         else:
             assert ref[0] == arr[0, 0, :].tolist()
             assert ref[1] == arr[-1, -1, :].tolist()
+
+    def test_str(self):
+        """Test decoding using a str path."""
+        p = DIR_10918 / 'p1' / 'A1.JPG'
+        p = os.fspath(p)
+        assert isinstance(p, str)
+        arr = decode(p)
+        assert arr.shape == (257, 255, 4)
+
+    def test_path(self):
+        """Test decoding using a Path path."""
+        p = DIR_10918 / 'p1' / 'A1.JPG'
+        assert isinstance(p, Path)
+        arr = decode(p)
+        assert arr.shape == (257, 255, 4)

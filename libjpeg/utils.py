@@ -1,6 +1,6 @@
 
 from math import ceil
-import pathlib
+from pathlib import Path
 import warnings
 
 import numpy as np
@@ -52,14 +52,18 @@ LIBJPEG_ERROR_CODES = {
 }
 
 
-def decode(arr, colour_transform=0, reshape=True):
+def decode(stream, colour_transform=0, reshape=True):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
+
+    .. versionchanged:: 1.2
+
+        `stream` can now also be :class:`str` or :class:`pathlib.Path`
 
     Parameters
     ----------
-    arr : numpy.ndarray or bytes
-        A 1D array of ``np.uint8``, or a Python :class:`bytes` object
-        containing the encoded JPEG image.
+    stream : str, Path, numpy.ndarray or bytes
+        The path to the JPEG file, a 1D array of ``np.uint8``, or a Python
+        :class:`bytes` object containing the raw encoded JPEG image.
     colour_transform : int, optional
         The colour transform used, one of:
         | ``0`` : No transform applied (default)
@@ -80,8 +84,14 @@ def decode(arr, colour_transform=0, reshape=True):
     RuntimeError
         If the decoding failed.
     """
-    if isinstance(arr, bytes):
-        arr = np.frombuffer(arr, 'uint8')
+    if isinstance(stream, (str, Path)):
+        with open(stream, "rb") as f:
+            stream = f.read()
+
+    if isinstance(stream, bytes):
+        arr = np.frombuffer(stream, 'uint8')
+    else:
+        arr = stream
 
     status, out, params = _libjpeg.decode(arr, colour_transform)
     status = status.decode("utf-8")
@@ -168,14 +178,18 @@ def decode_pixel_data(arr, ds):
     return decode(arr, transform, reshape=False)
 
 
-def get_parameters(arr):
+def get_parameters(stream):
     """Return a :class:`dict` containing JPEG image parameters.
+
+    .. versionchanged:: 1.2
+
+        `stream` can now also be :class:`str` or :class:`pathlib.Path`
 
     Parameters
     ----------
-    arr : numpy.ndarray or bytes
-        A 1D array of ``np.uint8``, or a Python :class:`bytes` object
-        containing the raw encoded JPEG image.
+    stream : str, Path, numpy.ndarray or bytes
+        The path to the JPEG file, a 1D array of ``np.uint8``, or a Python
+        :class:`bytes` object containing the raw encoded JPEG image.
 
     Returns
     -------
@@ -189,8 +203,14 @@ def get_parameters(arr):
     RuntimeError
         If reading the encoded JPEG data failed.
     """
-    if isinstance(arr, bytes):
-        arr = np.frombuffer(arr, 'uint8')
+    if isinstance(stream, (str, Path)):
+        with open(stream, "rb") as f:
+            stream = f.read()
+
+    if isinstance(stream, bytes):
+        arr = np.frombuffer(stream, 'uint8')
+    else:
+        arr = stream
 
     status, params = _libjpeg.get_parameters(arr)
     status = status.decode("utf-8")
@@ -239,15 +259,15 @@ def reconstruct(fin, fout, colourspace=1, falpha=None, upsample=True):
         ``True`` (default) to disable automatic upsampling, equivalent to
         the ``-U`` flag.
     """
-    if isinstance(fin, (str, pathlib.Path)):
+    if isinstance(fin, (str, Path)):
         fin = str(fin)
         fin = bytes(fin, 'utf-8')
 
-    if isinstance(fout, (str, pathlib.Path)):
+    if isinstance(fout, (str, Path)):
         fout = str(fout)
         fout = bytes(fout, 'utf-8')
 
-    if falpha and isinstance(falpha, (str, pathlib.Path)):
+    if falpha and isinstance(falpha, (str, Path)):
         falpha = str(falpha)
         falpha = bytes(falpha, 'utf-8')
 
