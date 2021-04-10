@@ -1,10 +1,6 @@
 name: Build wheels and deploy to PyPI
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
   release:
     types: [ published ]
 
@@ -65,8 +61,8 @@ jobs:
         name: wheels
         path: dist/
 
-    #- name: Publish package to PyPi
-    #  uses: pypa/gh-action-pypi-publish@master
-    #  with:
-    #    user: __token__
-    #    password: ${{ secrets.PYPI_PASSWORD }}
+    - name: Publish package to PyPi
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_PASSWORD }}
