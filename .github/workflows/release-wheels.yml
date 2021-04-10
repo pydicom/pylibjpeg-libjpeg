@@ -1,4 +1,4 @@
-name: Build wheels and deplot to PyPI
+name: Build wheels and deploy to PyPI
 
 on:
   push:

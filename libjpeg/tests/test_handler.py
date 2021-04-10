@@ -10,85 +10,12 @@ try:
     import pydicom.config
     from pydicom.pixel_data_handlers.util import convert_color_space
     from pydicom.encaps import defragment_data
-    from . import handler
     HAS_PYDICOM = True
 except ImportError:
     HAS_PYDICOM = False
 
-from . import add_handler, remove_handler
 from libjpeg import decode
 from libjpeg.data import get_indexed_datasets
-
-
-@pytest.mark.skipif(not HAS_PYDICOM, reason="pydicom unavailable")
-class TestHandler(object):
-    """Tests for the pixel data handler."""
-    def test_unsupported_syntax_raises(self):
-        """Test exception gets raised if unsupported transfer syntax."""
-        index = get_indexed_datasets('1.2.840.10008.1.2.1')
-        ds = index['CT_small.dcm']['ds']
-        assert '1.2.840.10008.1.2.1' == ds.file_meta.TransferSyntaxUID
-        msg = (
-            r"Unable to convert the pixel data as the transfer syntax "
-            r"is not supported by the pylibjpeg pixel data handler."
-        )
-        with pytest.raises(NotImplementedError, match=msg):
-            handler.get_pixeldata(ds)
-
-    def test_missing_element_raises(self):
-        """Test exception gets raised if required element missing."""
-        index = get_indexed_datasets('1.2.840.10008.1.2.4.50')
-        ds = index['JPEGBaseline_1s_1f_u_08_08.dcm']['ds']
-        del ds.BitsAllocated
-        assert 'BitsAllocated' not in ds
-        msg = (
-            r"Unable to convert the pixel data as the following required "
-            r"elements are missing from the dataset: BitsAllocated"
-        )
-        with pytest.raises(AttributeError, match=msg):
-            handler.get_pixeldata(ds)
-
-    def test_should_change_pi(self):
-        """Test the pointless function."""
-        index = get_indexed_datasets('1.2.840.10008.1.2.4.50')
-        ds = index['JPEGBaseline_1s_1f_u_08_08.dcm']['ds']
-        func = (
-            handler.should_change_PhotometricInterpretation_to_RGB
-        )
-        assert not func(ds)
-
-
-@pytest.mark.skipif(not HAS_PYDICOM, reason="pydicom unavailable")
-def test_add_handler():
-    """Test adding the handler to pydicom."""
-    assert handler not in pydicom.config.pixel_data_handlers
-    add_handler()
-    assert handler in pydicom.config.pixel_data_handlers
-
-    pydicom.config.pixel_data_handlers.remove(handler)
-
-
-@pytest.mark.skipif(not HAS_PYDICOM, reason="pydicom unavailable")
-def test_remove_handler():
-    """Test removing the handler from pydicom."""
-    add_handler()
-    assert handler in pydicom.config.pixel_data_handlers
-    remove_handler()
-    assert handler not in pydicom.config.pixel_data_handlers
-
-
-@pytest.mark.skipif(HAS_PYDICOM, reason="pydicom available")
-def test_add_handler_raises():
-    """Test adding the handler raises if no pydicom."""
-    with pytest.raises(ImportError):
-        add_handler()
-
-
-@pytest.mark.skipif(HAS_PYDICOM, reason="pydicom available")
-def test_remove_handler_raises():
-    """Test removing the handler raises if no pydicom."""
-    with pytest.raises(ImportError):
-        remove_handler()
 
 
 class HandlerTestBase(object):
@@ -96,11 +23,7 @@ class HandlerTestBase(object):
     uid = None
 
     def setup(self):
-        add_handler()
         self.ds = get_indexed_datasets(self.uid)
-
-    def teardown(self):
-        remove_handler()
 
     def plot(self, arr, index=None, cmap=None):
         import matplotlib.pyplot as plt
@@ -122,12 +45,6 @@ class HandlerTestBase(object):
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No dependencies")
 class TestLibrary(object):
     """Tests for libjpeg itself."""
-    def setup(self):
-        add_handler()
-
-    def teardown(self):
-        remove_handler()
-
     def test_non_conformant_raises(self):
         """Test that a non-conformant JPEG image raises an exception."""
         ds_list = get_indexed_datasets('1.2.840.10008.1.2.4.51')
@@ -1075,23 +992,6 @@ class TestJPEG2000Lossless(HandlerTestBase):
     """
     uid = '1.2.840.10008.1.2.4.90'
 
-    def setup(self):
-        add_handler()
-        self.ds = get_indexed_datasets(self.uid)
-
-        # Check if J2K is already supported, and if not add it
-        self.has_tsyntax = True
-        if self.uid not in handler.SUPPORTED_TRANSFER_SYNTAXES:
-            self.has_tsyntax = False
-            handler.SUPPORTED_TRANSFER_SYNTAXES.append(self.uid)
-
-    def teardown(self):
-        remove_handler()
-
-        # Restore J2K if it was originally supported
-        if not self.has_tsyntax:
-            handler.SUPPORTED_TRANSFER_SYNTAXES.remove(self.uid)
-
     def test_1s_1f_i_16_16(self):
         """Test process 2 greyscale."""
         ds = self.ds['693_J2KR.dcm']['ds']
@@ -1104,9 +1004,8 @@ class TestJPEG2000Lossless(HandlerTestBase):
         assert 1 == ds.PixelRepresentation
 
         msg = (
-            r"libjpeg error code '-1038' returned from Decode\(\): A "
-            r"misplaced marker segment was found - stream does not contain a "
-            r"JPEG file, SOI marker missing"
+            r"Unable to convert the Pixel Data as the 'pylibjpeg-openjpeg' "
+            r"plugin is not installed"
         )
         with pytest.raises(RuntimeError, match=msg):
             arr = ds.pixel_array
@@ -1120,23 +1019,6 @@ class TestJPEG2000(HandlerTestBase):
     """
     uid = '1.2.840.10008.1.2.4.91'
 
-    def setup(self):
-        add_handler()
-        self.ds = get_indexed_datasets(self.uid)
-
-        # Check if J2K is already supported, and if not add it
-        self.has_tsyntax = True
-        if self.uid not in handler.SUPPORTED_TRANSFER_SYNTAXES:
-            self.has_tsyntax = False
-            handler.SUPPORTED_TRANSFER_SYNTAXES.append(self.uid)
-
-    def teardown(self):
-        remove_handler()
-
-        # Restore J2K if it was originally supported
-        if not self.has_tsyntax:
-            handler.SUPPORTED_TRANSFER_SYNTAXES.remove(self.uid)
-
     def test_1s_1f_i_16_16(self):
         """Test process 2 greyscale."""
         ds = self.ds['693_J2KI.dcm']['ds']
@@ -1149,9 +1031,8 @@ class TestJPEG2000(HandlerTestBase):
         assert 1 == ds.PixelRepresentation
 
         msg = (
-            r"libjpeg error code '-1038' returned from Decode\(\): A "
-            r"misplaced marker segment was found - stream does not contain a "
-            r"JPEG file, SOI marker missing"
+            r"Unable to convert the Pixel Data as the 'pylibjpeg-openjpeg' "
+            r"plugin is not installed"
         )
         with pytest.raises(RuntimeError, match=msg):
             arr = ds.pixel_array
