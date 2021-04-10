@@ -28,9 +28,8 @@ jobs:
         architecture: ${{ matrix.arch }}
 
     - name: Install package and dependencies
-      with:
-        python-version: ${{ matrix.python-version }}
       run: |
+        python --version
         python -m pip install -U pip
         python -m pip install pytest cython numpy
         python -m pip install . -v
@@ -65,9 +64,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install package and dependencies
-      with:
-        python-version: ${{ matrix.python-version }}
       run: |
+        python --version
         python -m pip install -U pip
         python -m pip install . -v
         python -m pip install pytest
@@ -102,9 +100,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install package and dependencies
-      with:
-        python-version: ${{ matrix.python-version }}
       run: |
+        python --version
         python -m pip install -U pip
         python -m pip install .
         python -m pip install pytest coverage pytest-cov
