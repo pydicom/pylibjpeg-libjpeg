@@ -1,15 +1,15 @@
+[![Build Status](https://github.com/pydicom/pylibjpeg-libjpeg/workflows/unit-tests/badge.svg)](https://github.com/pydicom/pylibjpeg-libjpeg/actions?query=workflow%3Aunit-tests)
 [![codecov](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg)
-[![Build Status](https://github.com/pydicom/pylibjpeg-libjpeg/workflows/build/badge.svg)](https://github.com/pydicom/pylibjpeg-libjpeg/actions?query=workflow%3Abuild)
 [![PyPI version](https://badge.fury.io/py/pylibjpeg-libjpeg.svg)](https://badge.fury.io/py/pylibjpeg-libjpeg)
 [![Python versions](https://img.shields.io/pypi/pyversions/pylibjpeg-libjpeg.svg)](https://img.shields.io/pypi/pyversions/pylibjpeg-libjpeg.svg)
 
 ## pylibjpeg-libjpeg
 
-A Python 3.6+ wrapper for Thomas Richter's
+A Python 3.7+ wrapper for Thomas Richter's
 [libjpeg](https://github.com/thorfdbg/libjpeg), with a focus on use as a
 plugin for [pylibjpeg](http://github.com/pydicom/pylibjpeg).
 
-Linux, OSX and Windows are all supported.
+Linux, MacOS and Windows are all supported.
 
 ### Installation
 #### Dependencies
