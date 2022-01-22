@@ -88,13 +88,13 @@ def get_gcc_args():
 def get_source_files():
     """Return a list of paths to the source files to be compiled."""
     source_files = [
-        'libjpeg/_libjpeg.pyx',
-        os.path.join(INTERFACE_SRC, 'decode.cpp'),
-        os.path.join(INTERFACE_SRC, 'streamhook.cpp'),
+        PACKAGE_DIR / '_libjpeg.pyx',
+        INTERFACE_SRC /'decode.cpp',
+        INTERFACE_SRC /'streamhook.cpp',
     ]
-    for fname in Path(LIBJPEG_SRC).glob('*/*'):
-        if fname.suffix == '.cpp':
-            source_files.append(str(fname))
+    for p in LIBJPEG_SRC.glob('*/*'):
+        if p.suffix == '.cpp':
+            source_files.append(p)
 
     # Source files must always be relative to the setup.py directory
     source_files = [p.relative_to(PACKAGE_DIR.parent) for p in source_files]
@@ -121,7 +121,7 @@ elif platform.system() in ['Darwin', 'Linux']:
 extensions = [
     Extension(
         '_libjpeg',
-        get_source_files(),
+        [os.fspath(p) for p in get_source_files()],
         language='c++',
         include_dirs=[
             LIBJPEG_SRC,
