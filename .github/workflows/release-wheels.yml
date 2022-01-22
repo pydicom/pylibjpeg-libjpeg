@@ -31,7 +31,7 @@ jobs:
         name: wheels
         path: ./dist
 
-  build_wheels:
+  build-wheels:
     name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}-${{ matrix.manylinux_image }}
     runs-on: ${{ matrix.os }}
     strategy:
