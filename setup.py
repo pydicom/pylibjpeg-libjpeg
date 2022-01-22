@@ -96,6 +96,9 @@ def get_source_files():
         if fname.suffix == '.cpp':
             source_files.append(str(fname))
 
+    # Source files must always be relative to the setup.py directory
+    source_files = [p.relative_to(PACKAGE_DIR.parent) for p in source_files]
+
     return source_files
 
 
