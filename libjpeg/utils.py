@@ -123,7 +123,7 @@ def decode(stream, colour_transform=0, reshape=True):
     )
 
 
-def decode_pixel_data(arr, ds):
+def decode_pixel_data(arr, ds=None, **kwargs):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
 
     Intended for use with *pydicom* ``Dataset`` objects.
@@ -158,20 +158,20 @@ def decode_pixel_data(arr, ds):
         'YBR_FULL_422' : 0,
     }
 
-    if 'PhotometricInterpretation' not in ds:
+    photometric_interpretation = kwargs.get("photometric_interpretation")
+    pi = ds.get("PhotometricInterpretation", photometric_interpretation)
+    if not pi:
         raise ValueError(
             "The (0028,0004) Photometric Interpretation element is missing "
             "from the dataset"
         )
 
-    photometric_interp = ds.PhotometricInterpretation
-
     try:
-        transform = colours[photometric_interp]
+        transform = colours[pi]
     except KeyError:
         warnings.warn(
-            "Unsupported (0028,0004) Photometric Interpretation '{}', no "
-            "colour transformation will be applied".format(photometric_interp)
+            f"Unsupported (0028,0004) Photometric Interpretation '{pi}', no "
+            "colour transformation will be applied"
         )
         transform = 0
 
