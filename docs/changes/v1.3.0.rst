@@ -1,0 +1,9 @@
+.. _v1.3.0:
+
+1.3.0
+=====
+
+Changes
+.......
+
+* Added support for Python 3.10
