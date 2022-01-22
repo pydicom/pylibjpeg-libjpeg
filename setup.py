@@ -7,25 +7,13 @@ import setuptools
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
 import subprocess
-from distutils.command.build import build as build_orig
 import distutils.sysconfig
 
+import numpy
 
-LIBJPEG_SRC = os.path.join('libjpeg', 'src', 'libjpeg')
-INTERFACE_SRC = os.path.join('libjpeg', 'src', 'interface')
-
-
-# Workaround for needing cython and numpy
-# Solution from: https://stackoverflow.com/a/54128391/12606901
-class build(build_orig):
-    def finalize_options(self):
-        super().finalize_options()
-        __builtins__.__NUMPY_SETUP__ = False
-
-        import numpy
-        for ext in self.distribution.ext_modules:
-            if ext in extensions:
-                ext.include_dirs.append(numpy.get_include())
+PACKAGE_DIR = Path(__file__).parent / "libjpeg"
+LIBJPEG_SRC = PACKAGE_DIR / 'src' / 'libjpeg'
+INTERFACE_SRC = PACKAGE_DIR / 'src' / 'interface'
 
 
 def get_mscv_args():
@@ -33,7 +21,6 @@ def get_mscv_args():
     flags = [
         '/GS',  # Buffer security check
         '/W3',  # Warning level
-        '/wd"4335"',  # Ignore warning 4335
         '/Zc:wchar_t',  # Use windows char type
         '/Zc:inline',  # Remove unreferenced function or data (...)
         '/Zc:forScope',
@@ -51,8 +38,6 @@ def get_mscv_args():
         '/D_UNICODE',
         '/DUNICODE',
     ]
-    if sys.version_info.major == 3 and sys.version_info.minor >= 9:
-        flags.remove('/wd"4335"')
 
     # Set the architecture based on system architecture and Python
     is_x64 = platform.architecture()[0] == '64bit'
@@ -103,13 +88,16 @@ def get_gcc_args():
 def get_source_files():
     """Return a list of paths to the source files to be compiled."""
     source_files = [
-        'libjpeg/_libjpeg.pyx',
-        os.path.join(INTERFACE_SRC, 'decode.cpp'),
-        os.path.join(INTERFACE_SRC, 'streamhook.cpp'),
+        PACKAGE_DIR / '_libjpeg.pyx',
+        INTERFACE_SRC /'decode.cpp',
+        INTERFACE_SRC /'streamhook.cpp',
     ]
-    for fname in Path(LIBJPEG_SRC).glob('*/*'):
-        if fname.suffix == '.cpp':
-            source_files.append(str(fname))
+    for p in LIBJPEG_SRC.glob('*/*'):
+        if p.suffix == '.cpp':
+            source_files.append(p)
+
+    # Source files must always be relative to the setup.py directory
+    source_files = [p.relative_to(PACKAGE_DIR.parent) for p in source_files]
 
     return source_files
 
@@ -133,25 +121,24 @@ elif platform.system() in ['Darwin', 'Linux']:
 extensions = [
     Extension(
         '_libjpeg',
-        get_source_files(),
+        [os.fspath(p) for p in get_source_files()],
         language='c++',
         include_dirs=[
             LIBJPEG_SRC,
             INTERFACE_SRC,
+            numpy.get_include(),
             distutils.sysconfig.get_python_inc(),
-            # Numpy includes get added by the `build` subclass
         ],
         extra_compile_args=extra_compile_args,
         extra_link_args=extra_link_args,
     )
 ]
 
-VERSION_FILE = os.path.join('libjpeg', '_version.py')
-with open(VERSION_FILE) as fp:
-    exec(fp.read())
+with open(PACKAGE_DIR / '_version.py') as f:
+    exec(f.read())
 
-with open('README.md', 'r') as fp:
-    long_description = fp.read()
+with open('README.md', 'r') as f:
+    long_description = f.read()
 
 setup(
     name = 'pylibjpeg-libjpeg',
@@ -167,23 +154,20 @@ setup(
     url = "https://github.com/pydicom/pylibjpeg-libjpeg",
     license = "GPL V3.0",
     keywords = (
-        "dicom pydicom python medicalimaging radiotherapy oncology imaging "
-        "radiology nuclearmedicine jpg jpeg jpg-ls jpeg-ls libjpeg pylibjpeg"
+        "dicom pydicom python jpg jpeg jpg-ls jpeg-ls libjpeg pylibjpeg"
     ),
     classifiers = [
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Intended Audience :: Developers",
         "Intended Audience :: Healthcare Industry",
         "Intended Audience :: Science/Research",
-        #"Development Status :: 3 - Alpha",
-        #"Development Status :: 4 - Beta",
         "Development Status :: 5 - Production/Stable",
         "Natural Language :: English",
         "Programming Language :: C++",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
         "Operating System :: Microsoft :: Windows",
@@ -194,10 +178,8 @@ setup(
     package_data = {'': ['*.txt', '*.cpp', '*.h', '*.hpp', '*.pyx']},
     include_package_data = True,
     zip_safe = False,
-    python_requires = ">=3.6",
-    setup_requires = ['setuptools>=18.0', 'cython', 'numpy>=1.16.0'],
-    install_requires = ["numpy>=1.16.0"],
-    cmdclass = {'build': build},
+    python_requires = ">=3.7",
+    install_requires = ["numpy>=1.20.0"],
     ext_modules = extensions,
     # Plugin registrations
     entry_points={
