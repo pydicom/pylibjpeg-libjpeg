@@ -179,7 +179,10 @@ setup(
     include_package_data = True,
     zip_safe = False,
     python_requires = ">=3.7",
-    install_requires = ["numpy>=1.20.0"],
+    install_requires = [
+        "numpy >= 1.20; python_version == '3.7'",
+        "numpy >= 1.22; python_version >= '3.8'",
+    ],
     ext_modules = extensions,
     # Plugin registrations
     entry_points={

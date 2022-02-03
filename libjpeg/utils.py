@@ -1,4 +1,5 @@
 
+import enum
 from math import ceil
 from pathlib import Path
 import warnings
@@ -123,7 +124,7 @@ def decode(stream, colour_transform=0, reshape=True):
     )
 
 
-def decode_pixel_data(arr, ds=None, **kwargs):
+def decode_pixel_data(arr, ds = None, **kwargs):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
 
     Intended for use with *pydicom* ``Dataset`` objects.
@@ -133,12 +134,13 @@ def decode_pixel_data(arr, ds=None, **kwargs):
     arr : numpy.ndarray or bytes
         A 1D array of ``np.uint8``, or a Python :class:`bytes` object
         containing the encoded JPEG image.
-    ds : pydicom.dataset.Dataset
+    ds : pydicom.dataset.Dataset, optional
         A :class:`~pydicom.dataset.Dataset` containing the group ``0x0028``
         elements corresponding to the *Pixel Data*. Must contain a
         (0028,0004) *Photometric Interpretation* element with the colour
         space of the pixel data, one of ``'MONOCHROME1'``, ``'MONOCHROME2'``,
         ``'RGB'``, ``'YBR_FULL'``, ``'YBR_FULL_422'``.
+    **kwargs
 
     Returns
     -------
