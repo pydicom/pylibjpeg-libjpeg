@@ -124,12 +124,7 @@ def decode(stream, colour_transform=0, reshape=True):
     )
 
 
-def decode_pixel_data(
-    src: Union[bytes, "numpy.ndarray"],
-    ds: Optional["Dataset"] = None,
-    as_type: int = RETURN_TYPE.NDARRAY,
-    **kwargs,
-) -> "numpy.ndarray":
+def decode_pixel_data(arr, ds = None, **kwargs):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
 
     Intended for use with *pydicom* ``Dataset`` objects.
