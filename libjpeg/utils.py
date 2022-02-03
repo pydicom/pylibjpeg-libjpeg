@@ -53,12 +53,6 @@ LIBJPEG_ERROR_CODES = {
 }
 
 
-class RETURN_TYPE(enum.Enum):
-    BYTES = 0
-    BYTEARRAY = 1
-    NDARRAY = 2
-
-
 def decode(stream, colour_transform=0, reshape=True):
     """Return the decoded JPEG data from `arr` as a :class:`numpy.ndarray`.
 
@@ -163,9 +157,6 @@ def decode_pixel_data(
     RuntimeError
         If the decoding failed.
     """
-    if as_type != RETURN_TYPE.NDARRAY:
-        raise NotImplementedError(f"Unsupported 'as_type' value {as_type}")
-
     colours = {
         'MONOCHROME1': 0,
         'MONOCHROME2' : 0,
