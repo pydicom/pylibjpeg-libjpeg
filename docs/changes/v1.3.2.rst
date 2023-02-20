@@ -1,0 +1,9 @@
+.. _v1.3.2:
+
+1.3.2
+=====
+
+Changes
+.......
+
+* Updated libjpeg to current version 1.64
