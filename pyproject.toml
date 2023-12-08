@@ -1,7 +1,8 @@
 [build-system]
 requires = [
-    "setuptools == 60.5", "cython == 0.29.33", "wheel == 0.37",
-    "numpy==1.20; python_version=='3.7'",
-    "numpy==1.22; python_version>='3.8' and python_version < '3.11'",
-    "numpy==1.23.2; python_version>='3.11'",
+    "setuptools >= 60.5", "cython >= 0.29.33", "wheel >= 0.37",
+    "numpy>=1.20; python_version=='3.7'",
+    "numpy>=1.22; python_version>='3.8' and python_version < '3.11'",
+    "numpy>=1.23.2; python_version>='3.11' and python_version < '3.12'",
+    "numpy>=1.26; python_version>='3.12'",
 ]
