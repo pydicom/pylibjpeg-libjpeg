@@ -169,6 +169,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
         "Operating System :: Microsoft :: Windows",
@@ -183,8 +184,8 @@ setup(
     install_requires = [
         "numpy >= 1.20; python_version == '3.7'",
         "numpy >= 1.22; python_version >= '3.8' and python_version < '3.11'",
-        "numpy >= 1.23.2; python_version >= '3.11'",
-
+        "numpy >= 1.23.2; python_version >= '3.11' and python_version < '3.12'",
+        "numpy >= 1.26; python_version>='3.12'",
     ],
     ext_modules = extensions,
     # Plugin registrations
