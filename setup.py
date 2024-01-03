@@ -1,204 +1,82 @@
+# -*- coding: utf-8 -*-
+from setuptools import setup
 
-import os
-import sys
-from pathlib import Path
-import platform
-import setuptools
-from setuptools import setup, find_packages
-from setuptools.extension import Extension
-import subprocess
-import distutils.sysconfig
+packages = \
+['libjpeg', 'libjpeg.src.libjpeg', 'libjpeg.tests']
 
-import numpy
+package_data = \
+{'': ['*'],
+ 'libjpeg': ['src/interface/*'],
+ 'libjpeg.src.libjpeg': ['boxes/*',
+                         'cmd/*',
+                         'codestream/*',
+                         'coding/*',
+                         'colortrafo/*',
+                         'control/*',
+                         'dct/*',
+                         'interface/*',
+                         'io/*',
+                         'marker/*',
+                         'std/*',
+                         'tools/*',
+                         'upsampling/*',
+                         'vs10.0/jpeg/*',
+                         'vs10.0/jpeg/jpeg/*',
+                         'vs10.0/jpeg/jpegdll/*',
+                         'vs10.0/jpeg/jpeglib/*',
+                         'vs12.0/jpeg/*',
+                         'vs12.0/jpeg/jpeg/*',
+                         'vs12.0/jpeg/jpegdll/*',
+                         'vs12.0/jpeg/jpeglib/*']}
 
-PACKAGE_DIR = Path(__file__).parent / "libjpeg"
-LIBJPEG_SRC = PACKAGE_DIR / 'src' / 'libjpeg'
-INTERFACE_SRC = PACKAGE_DIR / 'src' / 'interface'
+install_requires = \
+['numpy>=1.24,<2.0']
 
+extras_require = \
+{':extra == "tests"': ['pylibjpeg-data @ '
+                       'git+https://github.com/pydicom/pylibjpeg-data.git'],
+ 'dev': ['black>=23.1,<24.0',
+         'coverage>=7.3,<8.0',
+         'mypy>=1.7,<2.0',
+         'pytest>=7.4,<8.0',
+         'pytest-cov>=4.1,<5.0'],
+ 'tests': ['coverage>=7.3,<8.0', 'pytest>=7.4,<8.0', 'pytest-cov>=4.1,<5.0']}
 
-def get_mscv_args():
-    """Return a list of compiler args for MSVC++'s compiler."""
-    flags = [
-        '/GS',  # Buffer security check
-        '/W3',  # Warning level
-        '/Zc:wchar_t',  # Use windows char type
-        '/Zc:inline',  # Remove unreferenced function or data (...)
-        '/Zc:forScope',
-        '/Od',  # Disable optimisation
-        '/Oy-',  # (x86 only) don't omit frame pointer
-        '/openmp-',  # Disable #pragma omp directive
-        '/FC',  # Display full path of source code files
-        '/fp:precise',  # Floating-point behaviour
-        '/Gd',  # (x86 only) use __cdecl calling convention
-        '/GF-',  # Disable string pooling
-        '/GR',  # Enable run-time type info
-        '/RTC1',  # Enable run-time error checking
-        '/MT',  # Create multithreading executable
-        # /D defines constants and macros
-        '/D_UNICODE',
-        '/DUNICODE',
-    ]
+entry_points = \
+{'pylibjpeg.jpeg_decoders': ['openjpeg = libjpeg:decode'],
+ 'pylibjpeg.jpeg_ls_decoders': ['openjpeg = libjpeg:decode'],
+ 'pylibjpeg.jpeg_xt_decoders': ['openjpeg = libjpeg:decode'],
+ 'pylibjpeg.pixel_data_decoders': ['1.2.840.10008.1.2.4.50 = '
+                                   'libjpeg:decode_pixel_data',
+                                   '1.2.840.10008.1.2.4.51 = '
+                                   'libjpeg:decode_pixel_data',
+                                   '1.2.840.10008.1.2.4.57 = '
+                                   'libjpeg:decode_pixel_data',
+                                   '1.2.840.10008.1.2.4.70 = '
+                                   'libjpeg:decode_pixel_data',
+                                   '1.2.840.10008.1.2.4.80 = '
+                                   'libjpeg:decode_pixel_data',
+                                   '1.2.840.10008.1.2.4.81 = '
+                                   'libjpeg:decode_pixel_data']}
 
-    # Set the architecture based on system architecture and Python
-    is_x64 = platform.architecture()[0] == '64bit'
-    if is_x64 and sys.maxsize > 2**32:
-        flags.append('/DWIN64=1')
-    else:
-        # Architecture is 32-bit, or Python is 32-bit
-        flags.append('/DWIN32=1')
+setup_kwargs = {
+    'name': 'libjpeg',
+    'version': '2.0.0.dev0',
+    'description': 'A Python framework for decoding JPEG and decoding/encoding DICOMRLE data, with a focus on supporting pydicom',
+    'long_description': "[![Build Status](https://github.com/pydicom/pylibjpeg-libjpeg/workflows/unit-tests/badge.svg)](https://github.com/pydicom/pylibjpeg-libjpeg/actions?query=workflow%3Aunit-tests)\n[![codecov](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/pydicom/pylibjpeg-libjpeg)\n[![PyPI version](https://badge.fury.io/py/pylibjpeg-libjpeg.svg)](https://badge.fury.io/py/pylibjpeg-libjpeg)\n[![Python versions](https://img.shields.io/pypi/pyversions/pylibjpeg-libjpeg.svg)](https://img.shields.io/pypi/pyversions/pylibjpeg-libjpeg.svg)\n\n## pylibjpeg-libjpeg\n\nA Python 3.8+ wrapper for Thomas Richter's\n[libjpeg](https://github.com/thorfdbg/libjpeg), with a focus on use as a\nplugin for [pylibjpeg](http://github.com/pydicom/pylibjpeg).\n\nLinux, MacOS and Windows are all supported.\n\n### Installation\n#### Dependencies\n[NumPy](http://numpy.org)\n\n#### Installing the current release\n```bash\npip install pylibjpeg-libjpeg\n```\n#### Installing the development version\n\nMake sure [Python](https://www.python.org/) and [Git](https://git-scm.com/) are installed. For Windows, you also need to install\n[Microsoft's C++ Build Tools](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).\n```bash\ngit clone --recurse-submodules https://github.com/pydicom/pylibjpeg-libjpeg\npython -m pip install pylibjpeg-libjpeg\n```\n\n### Supported JPEG Formats\n#### Decoding\n\n| ISO/IEC Standard | ITU Equivalent | JPEG Format |\n| --- | --- | --- |\n| [10918](https://www.iso.org/standard/18902.html) | [T.81](https://www.itu.int/rec/T-REC-T.81/en) | [JPEG](https://jpeg.org/jpeg/index.html)    |\n| [14495](https://www.iso.org/standard/22397.html)   | [T.87](https://www.itu.int/rec/T-REC-T.87/en) | [JPEG-LS](https://jpeg.org/jpegls/index.html) |\n| [18477](https://www.iso.org/standard/62552.html)   | | [JPEG XT](https://jpeg.org/jpegxt/) |\n\n#### Encoding\nEncoding of JPEG images is not currently supported\n\n### Supported Transfer Syntaxes\n#### Decoding\n| UID | Description |\n| --- | --- |\n| 1.2.840.10008.1.2.4.50 | JPEG Baseline (Process 1) |\n| 1.2.840.10008.1.2.4.51 | JPEG Extended (Process 2 and 4) |\n| 1.2.840.10008.1.2.4.57 | JPEG Lossless, Non-Hierarchical (Process 14) |\n| 1.2.840.10008.1.2.4.70 | JPEG Lossless, Non-Hierarchical, First-Order Prediction (Process 14 [Selection Value 1]) |\n| 1.2.840.10008.1.2.4.80 | JPEG-LS Lossless |\n| 1.2.840.10008.1.2.4.81 | JPEG-LS Lossy (Near-Lossless) Image Compression |\n\n### Usage\n#### With pylibjpeg and pydicom\n\n```python\nfrom pydicom import dcmread\nfrom pydicom.data import get_testdata_file\n\nds = dcmread(get_testdata_file('JPEG-LL.dcm'))\narr = ds.pixel_array\n```\n\n#### Standalone JPEG decoding\n\nYou can also decode JPEG images to a [numpy ndarray][1]:\n\n[1]: https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html\n\n```python\nfrom libjpeg import decode\n\nwith open('filename.jpg', 'rb') as f:\n    # Returns a numpy array\n    arr = decode(f.read())\n\n# Or simply...\narr = decode('filename.jpg')\n```\n",
+    'author': 'pylibjpeg-libjpeg contributors',
+    'author_email': 'None',
+    'maintainer': 'scaramallion',
+    'maintainer_email': 'scaramallion@users.noreply.github.com',
+    'url': 'https://github.com/pydicom/pylibjpeg-openjpeg',
+    'packages': packages,
+    'package_data': package_data,
+    'install_requires': install_requires,
+    'extras_require': extras_require,
+    'entry_points': entry_points,
+    'python_requires': '>=3.8,<4.0',
+}
+from build import *
+build(setup_kwargs)
 
-    return flags
-
-
-def get_gcc_args():
-    """Return a list of compiler and linker args for GCC/clang.
-
-    The args are determined by running the src/libjpeg/configure script then
-    parsing src/libjpeg/automakefile for the relevant values.
-
-    Returns
-    -------
-    dict
-        A dict with keys COMPILER_CMD, CC_ONLY, SETTINGS, PREFIX,
-        PTHREADCFLAGS, PTHREADLDFLAGS, PTHREADLIBS, HWTYPE, HAVE_ADDONS,
-        BITSIZE, ADDOPTS, LIB_OPTS, EXTRA_LIBS, CPU, TUNE.
-    """
-    # Run configure script once
-    # Using GCC or clang, run `configure` bash script once
-    if 'config.log' not in os.listdir(LIBJPEG_SRC):
-        # Needs to be determined before changing the working dir
-        fpath = os.path.abspath(LIBJPEG_SRC)
-        # Needs to be run from within the src/libjpeg directory
-        current_dir = os.getcwd()
-        os.chdir(LIBJPEG_SRC)
-        subprocess.call([os.path.join(fpath, 'configure')])
-        os.chdir(current_dir)
-
-    # Get compilation options
-    with open(os.path.join(LIBJPEG_SRC, 'automakefile')) as fp:
-        lines = fp.readlines()
-
-    lines = [ll for ll in lines if not ll.startswith('#')]
-    opts = [ll.split('=', 1) for ll in lines]
-    opts = {vv[0].strip():list(vv[1].strip().split(' ')) for vv in opts}
-
-    return opts
-
-
-def get_source_files():
-    """Return a list of paths to the source files to be compiled."""
-    source_files = [
-        PACKAGE_DIR / '_libjpeg.pyx',
-        INTERFACE_SRC /'decode.cpp',
-        INTERFACE_SRC /'streamhook.cpp',
-    ]
-    for p in LIBJPEG_SRC.glob('*/*'):
-        if p.suffix == '.cpp':
-            source_files.append(p)
-
-    # Source files must always be relative to the setup.py directory
-    source_files = [p.relative_to(PACKAGE_DIR.parent) for p in source_files]
-
-    return source_files
-
-
-# Compiler and linker arguments
-extra_compile_args = []
-extra_link_args = []
-if platform.system() == 'Windows':
-    os.environ['LIB'] = os.path.abspath(
-        os.path.join(sys.executable, '../', 'libs')
-    )
-    extra_compile_args = get_mscv_args()
-elif platform.system() in ['Darwin', 'Linux']:
-    # Skip configuration if running with `sdist`
-    if 'sdist' not in sys.argv:
-        opts = get_gcc_args()
-        extra_compile_args += opts['ADDOPTS']
-        extra_link_args += opts['EXTRA_LIBS']
-
-
-extensions = [
-    Extension(
-        '_libjpeg',
-        [os.fspath(p) for p in get_source_files()],
-        language='c++',
-        include_dirs=[
-            LIBJPEG_SRC,
-            INTERFACE_SRC,
-            numpy.get_include(),
-            distutils.sysconfig.get_python_inc(),
-        ],
-        extra_compile_args=extra_compile_args,
-        extra_link_args=extra_link_args,
-    )
-]
-
-with open(PACKAGE_DIR / '_version.py') as f:
-    exec(f.read())
-
-with open('README.md', 'r') as f:
-    long_description = f.read()
-
-setup(
-    name = 'pylibjpeg-libjpeg',
-    description = (
-        "A Python wrapper for libjpeg, with a focus on use as a plugin for "
-        "for pylibjpeg"
-    ),
-    long_description = long_description,
-    long_description_content_type = 'text/markdown',
-    version = __version__,
-    author = "scaramallion",
-    author_email = "scaramallion@users.noreply.github.com",
-    url = "https://github.com/pydicom/pylibjpeg-libjpeg",
-    license = "GPL V3.0",
-    keywords = (
-        "dicom pydicom python jpg jpeg jpg-ls jpeg-ls libjpeg pylibjpeg"
-    ),
-    classifiers = [
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Healthcare Industry",
-        "Intended Audience :: Science/Research",
-        "Development Status :: 5 - Production/Stable",
-        "Natural Language :: English",
-        "Programming Language :: C++",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: POSIX :: Linux",
-        "Operating System :: Microsoft :: Windows",
-        "Topic :: Scientific/Engineering :: Medical Science Apps.",
-        "Topic :: Software Development :: Libraries",
-    ],
-    packages = find_packages(),
-    package_data = {'': ['*.txt', '*.cpp', '*.h', '*.hpp', '*.pyx']},
-    include_package_data = True,
-    zip_safe = False,
-    python_requires = ">=3.7",
-    install_requires = [
-        "numpy >= 1.20; python_version == '3.7'",
-        "numpy >= 1.22; python_version >= '3.8' and python_version < '3.11'",
-        "numpy >= 1.23.2; python_version >= '3.11'",
-
-    ],
-    ext_modules = extensions,
-    # Plugin registrations
-    entry_points={
-        'pylibjpeg.pixel_data_decoders': [
-            "1.2.840.10008.1.2.4.50 = libjpeg:decode_pixel_data",
-            "1.2.840.10008.1.2.4.51 = libjpeg:decode_pixel_data",
-            "1.2.840.10008.1.2.4.57 = libjpeg:decode_pixel_data",
-            "1.2.840.10008.1.2.4.70 = libjpeg:decode_pixel_data",
-            "1.2.840.10008.1.2.4.80 = libjpeg:decode_pixel_data",
-            "1.2.840.10008.1.2.4.81 = libjpeg:decode_pixel_data",
-        ],
-        'pylibjpeg.jpeg_decoders': 'libjpeg = libjpeg:decode',
-        'pylibjpeg.jpeg_ls_decoders': 'libjpeg = libjpeg:decode',
-        'pylibjpeg.jpeg_xt_decoders': 'libjpeg = libjpeg:decode',
-    },
-)
+setup(**setup_kwargs)

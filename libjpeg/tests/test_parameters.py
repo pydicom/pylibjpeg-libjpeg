@@ -109,7 +109,7 @@ def test_unknown_error_raised():
 
 
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
-class TestGetParametersDCM(object):
+class TestGetParametersDCM:
     """Tests for get_parameters() using DICOM datasets."""
     def generate_frames(self, ds):
         """Return a generator object with the dataset's pixel data frames."""
@@ -251,7 +251,7 @@ REF_JPG = {
 }
 
 
-class TestGetParametersJPG(object):
+class TestGetParametersJPG:
     """Tests for get_parameters() using JPEG compliance data."""
     @pytest.mark.parametrize("fname, info", REF_JPG['10918']['p1'])
     def test_baseline(self, fname, info):
