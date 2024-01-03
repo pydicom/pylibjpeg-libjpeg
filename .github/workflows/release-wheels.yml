@@ -210,6 +210,7 @@ jobs:
         path: dist/
 
     - name: Install from package wheels and test
+      # If testing wheel builds might need --pre to install dev version
       run: |
         python -m venv testwhl
         source testwhl/bin/activate

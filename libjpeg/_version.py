@@ -2,4 +2,4 @@
 
 from importlib.metadata import version
 
-__version__: str = version("libjpeg")
+__version__: str = version("pylibjpeg-libjpeg")

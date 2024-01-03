@@ -34,10 +34,10 @@ classifiers=[
     "Topic :: Software Development :: Libraries",
 ]
 description = """\
-    A Python framework for decoding JPEG and decoding/encoding DICOM\
-    RLE data, with a focus on supporting pydicom\
+    "A Python wrapper for libjpeg, with a focus on use as a plugin for "\
+    "for pylibjpeg"\
 """
-homepage = "https://github.com/pydicom/pylibjpeg-openjpeg"
+homepage = "https://github.com/pydicom/pylibjpeg-libjpeg"
 include = [
     "libjpeg/src/*",
     # {path = "*.so", format= "wheel"},
