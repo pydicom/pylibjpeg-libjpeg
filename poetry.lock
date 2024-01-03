@@ -314,7 +314,7 @@ testing = ["pytest", "pytest-benchmark"]
 name = "pylibjpeg-data"
 version = "1.0.0.dev0"
 description = "Optional JPEG and DICOM data used for testing pylibjpeg"
-optional = false
+optional = true
 python-versions = ">=3.6"
 files = []
 develop = false
@@ -394,4 +394,4 @@ tests = ["coverage", "pylibjpeg-data", "pytest", "pytest-cov"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "fa474af2ba57592aba0fee6940e9429b0e6899490a235c2bc5157782328801ff"
+content-hash = "64522c182d9c24165d3bf5ab2f630c9bf8cb64fc47ba6b15c3c64e06b46f1485"
