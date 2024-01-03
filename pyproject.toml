@@ -63,7 +63,7 @@ coverage = { version = "^7.3", optional = true }
 mypy = { version = "^1.7", optional = true }
 pytest = { version = "^7.4", optional = true }
 pytest-cov = { version = "^4.1", optional = true }
-pylibjpeg-data = { git = "https://github.com/pydicom/pylibjpeg-data.git"}
+pylibjpeg-data = { git = "https://github.com/pydicom/pylibjpeg-data.git", optional = true}
 
 [tool.poetry.extras]
 dev = ["black", "coverage", "mypy", "pytest", "pytest-cov"]
