@@ -218,7 +218,7 @@ jobs:
         python -m pip uninstall -y pylibjpeg-libjpeg
         python -m pip uninstall -y pylibjpeg-openjpeg
         python -m pip install git+https://github.com/pydicom/pylibjpeg-data
-        python -m pip install -U --no-index --find-links dist/ pylibjpeg*libjpeg
+        python -m pip install -U --pre --find-links dist/ pylibjpeg-libjpeg
         python -c "import pytest; pytest.main(['--pyargs', 'libjpeg.tests'])"
         deactivate
 
