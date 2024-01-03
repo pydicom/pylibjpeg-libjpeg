@@ -220,7 +220,7 @@ jobs:
         python -m pip uninstall -y pylibjpeg-openjpeg
         python -m pip install git+https://github.com/pydicom/pylibjpeg-data
         python -m pip install -U --pre --find-links dist/ pylibjpeg-libjpeg
-        python -c "import pytest; pytest.main(['--pyargs', 'libjpeg.tests'])"
+        python -m pytest --pyargs libjpeg.tests
         deactivate
 
     - name: Install from package tarball and test
@@ -233,7 +233,7 @@ jobs:
         python -m pip uninstall -y pylibjpeg-openjpeg
         python -m pip install git+https://github.com/pydicom/pylibjpeg-data
         python -m pip install -U dist/pylibjpeg*libjpeg-*.tar.gz
-        python -c "import pytest; pytest.main(['--pyargs', 'libjpeg.tests'])"
+        python -m pytest --pyargs libjpeg.tests
         deactivate
 
   # The pypi upload fails with non-linux containers, so grab the uploaded
