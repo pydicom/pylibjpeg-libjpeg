@@ -18,11 +18,11 @@ from libjpeg import decode
 from libjpeg.data import get_indexed_datasets
 
 
-class HandlerTestBase(object):
+class HandlerTestBase:
     """Baseclass for handler tests."""
     uid = None
 
-    def setup(self):
+    def setup_method(self):
         self.ds = get_indexed_datasets(self.uid)
 
     def plot(self, arr, index=None, cmap=None):
@@ -43,7 +43,7 @@ class HandlerTestBase(object):
 
 
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No dependencies")
-class TestLibrary(object):
+class TestLibrary:
     """Tests for libjpeg itself."""
     def test_non_conformant_raises(self):
         """Test that a non-conformant JPEG image raises an exception."""

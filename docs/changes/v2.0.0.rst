@@ -1,0 +1,10 @@
+.. _v2.0.0:
+
+2.0.0
+=====
+
+Changes
+.......
+
+* Supports Python 3.8-3.12
+* Switched build to ``pyproject.toml``

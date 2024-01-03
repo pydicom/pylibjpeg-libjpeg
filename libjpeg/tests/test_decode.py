@@ -125,7 +125,7 @@ def test_invalid_colourspace_warns():
 
 
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
-class TestDecodeDCM(object):
+class TestDecodeDCM:
     """Tests for get_parameters() using DICOM datasets."""
     def generate_frames(self, ds):
         """Return a generator object with the dataset's pixel data frames."""
@@ -394,7 +394,7 @@ REF_JPG = {
 }
 
 
-class TestDecodeJPG(object):
+class TestDecodeJPG:
     """Tests for get_parameters() using JPEG compliance data."""
     @pytest.mark.parametrize("fname, info, ref", REF_JPG['10918']['p1'])
     def test_baseline(self, fname, info, ref):
