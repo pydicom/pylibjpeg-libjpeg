@@ -40,7 +40,6 @@ description = """\
 homepage = "https://github.com/pydicom/pylibjpeg-libjpeg"
 include = [
     "libjpeg/src/*",
-    # {path = "*.so", format= "wheel"},
 ]
 exclude = [
     "libjpeg/src/config.log",
@@ -73,13 +72,13 @@ dev = ["black", "coverage", "mypy", "pytest", "pytest-cov"]
 tests = ["coverage", "pytest", "pytest-cov", "pylibjpeg-data"]
 
 [tool.poetry.plugins."pylibjpeg.jpeg_decoders"]
-openjpeg = "libjpeg:decode"
+libjpeg = "libjpeg:decode"
 
 [tool.poetry.plugins."pylibjpeg.jpeg_ls_decoders"]
-openjpeg = "libjpeg:decode"
+libjpeg = "libjpeg:decode"
 
 [tool.poetry.plugins."pylibjpeg.jpeg_xt_decoders"]
-openjpeg = "libjpeg:decode"
+libjpeg = "libjpeg:decode"
 
 [tool.poetry.plugins."pylibjpeg.pixel_data_decoders"]
 "1.2.840.10008.1.2.4.50" = "libjpeg:decode_pixel_data"
