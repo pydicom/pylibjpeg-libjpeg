@@ -29,7 +29,7 @@ jobs:
         poetry build -f sdist
 
     - name: Store artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: sdist
         path: ./dist
@@ -155,7 +155,7 @@ jobs:
 
     - name: Set up QEMU
       if: ${{ matrix.platform_id == 'manylinux_aarch64' }}
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
 
@@ -182,7 +182,7 @@ jobs:
         python -m cibuildwheel --output-dir dist
 
     - name: Store artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: wheel-${{ matrix.python }}-${{ matrix.platform_id }}
         path: ./dist
@@ -204,7 +204,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Download the wheels
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: dist/
         merge-multiple: true
@@ -247,7 +247,7 @@ jobs:
   #
   #   steps:
   #   - name: Download the wheels
-  #     uses: actions/download-artifact@v3
+  #     uses: actions/download-artifact@v4
   #     with:
   #       name: wheels
   #       path: dist/
