@@ -254,6 +254,23 @@ class TestDecodeDCM:
         if 9 <= info[3] <= 16:
             assert arr.dtype == "uint16"
 
+    def test_v2_non_conformant_raises(self):
+        """Test that a non-conformant JPEG image raises an exception."""
+        ds_list = get_indexed_datasets("1.2.840.10008.1.2.4.51")
+        # Image has invalid Se value in the SOS marker segment
+        item = ds_list["JPEG-lossy.dcm"]
+        assert 0xC000 == item["Status"][1]
+        ds = item["ds"]
+        nr_frames = ds.get("NumberOfFrames", 1)
+        frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
+        msg = (
+            r"libjpeg error code '-1038' returned from decode\(\): A "
+            r"misplaced marker segment was found - scan start must be zero "
+            r"and scan stop must be 63 for the sequential operating modes"
+        )
+        with pytest.raises(RuntimeError, match=msg):
+            decode_pixel_data(frame, version=2)
+
 
 REF_JPG = {
     "10918": {
@@ -407,6 +424,18 @@ class TestDecodeJPG:
 
         # Process 1 is always 8-bit
         assert arr.dtype == "uint8"
+
+        assert ref[0] == arr[0, 0, :].tolist()
+        assert ref[1] == arr[-1, -1, :].tolist()
+
+        buffer = decode_pixel_data(data, version=2)
+        assert isinstance(buffer, bytearray)
+        arr = np.frombuffer(buffer, dtype="u1")
+        assert arr.flags.writeable
+        if info[2] == 1:
+            arr = arr.reshape((info[0], info[1]))
+        else:
+            arr = arr.reshape((info[0], info[1], info[2]))
 
         assert ref[0] == arr[0, 0, :].tolist()
         assert ref[1] == arr[-1, -1, :].tolist()
