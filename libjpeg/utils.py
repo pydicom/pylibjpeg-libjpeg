@@ -210,7 +210,7 @@ def decode_pixel_data(
         return decode(src, transform, reshape=False)
 
     # Version 2
-    photometric_interpretation = kwargs.get("photometric_interpretation", pi)
+    photometric_interpretation = kwargs.get("photometric_interpretation", None)
     colour_transform = COLOURSPACE.get(photometric_interpretation, 0)
 
     status, out, params = _libjpeg.decode(src, colour_transform, as_array=False)

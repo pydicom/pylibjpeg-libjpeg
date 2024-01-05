@@ -8,3 +8,5 @@ Changes
 
 * Supports Python 3.8-3.12
 * Switched build to ``pyproject.toml``
+* Added type hints
+* Added support for returning a bytearray containing the decoded image data
