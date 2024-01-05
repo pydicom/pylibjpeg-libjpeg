@@ -9,8 +9,9 @@ from typing import Any, List, Dict
 
 
 PACKAGE_DIR = Path(__file__).parent / "libjpeg"
-LIBJPEG_SRC = PACKAGE_DIR / 'src' / 'libjpeg'
-INTERFACE_SRC = PACKAGE_DIR / 'src' / 'interface'
+LIB_DIR = Path(__file__).parent / "lib"
+LIBJPEG_SRC = LIB_DIR / 'libjpeg'
+INTERFACE_SRC = LIB_DIR / 'interface'
 
 
 def build(setup_kwargs: Any) -> Any:

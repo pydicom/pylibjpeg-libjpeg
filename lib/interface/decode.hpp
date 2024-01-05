@@ -18,7 +18,9 @@
 
     // Return the parameters of the encoded JPEG file in `inArray`
     extern std::string GetJPEGParameters(
-        char *inArray, int inLength, struct JPEGParameters *param
+        char *inArray,
+        int inLength,
+        struct JPEGParameters *param
     );
 
     struct StreamData {

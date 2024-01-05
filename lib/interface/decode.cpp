@@ -18,8 +18,13 @@
 #include "../libjpeg/interface/jpeg.hpp"
 
 
-std::string Decode(char *inArray, char *outArray, int inLength, int outLength, int colourTransform)
-{
+std::string Decode(
+    char *inArray,
+    char *outArray,
+    int inLength,
+    int outLength,
+    int colourTransform
+) {
     /*
 
     Parameters
@@ -254,8 +259,11 @@ std::string Decode(char *inArray, char *outArray, int inLength, int outLength, i
 }
 
 
-std::string GetJPEGParameters(char *inArray, int inLength, struct JPEGParameters *param)
-{
+std::string GetJPEGParameters(
+    char *inArray,
+    int inLength,
+    struct JPEGParameters *param
+) {
     /*
 
     Parameters

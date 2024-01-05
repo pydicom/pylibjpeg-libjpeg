@@ -51,8 +51,8 @@ JPG_LONG IStreamHook(struct JPG_Hook *hook, struct JPG_TagItem *tags)
         }
         case JPGFLAG_ACTION_WRITE:
         {
-            UBYTE *buffer = (UBYTE *)tags->GetTagPtr(JPGTAG_FIO_BUFFER);
-            ULONG  size   = (ULONG  )tags->GetTagData(JPGTAG_FIO_SIZE);
+            // UBYTE *buffer = (UBYTE *)tags->GetTagPtr(JPGTAG_FIO_BUFFER);
+            // ULONG  size   = (ULONG  )tags->GetTagData(JPGTAG_FIO_SIZE);
 
             // We want to raise an error so writing can be implemented
             return -1;
@@ -60,7 +60,7 @@ JPG_LONG IStreamHook(struct JPG_Hook *hook, struct JPG_TagItem *tags)
         case JPGFLAG_ACTION_SEEK:
         {
             LONG mode   = tags->GetTagData(JPGTAG_FIO_SEEKMODE);
-            LONG offset = tags->GetTagData(JPGTAG_FIO_OFFSET);
+            // LONG offset = tags->GetTagData(JPGTAG_FIO_OFFSET);
 
             // We want to raise an error here seek can be implemented
             switch(mode) {

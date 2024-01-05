@@ -38,19 +38,22 @@ description = """\
     "for pylibjpeg"\
 """
 homepage = "https://github.com/pydicom/pylibjpeg-libjpeg"
-include = [
-    "libjpeg/src/*",
-]
-exclude = [
-    "libjpeg/src/config.log",
-    "libjpeg/src/config.status",
-]
 keywords = ["dicom pydicom python jpg jpeg jpg-ls jpeg-ls libjpeg pylibjpeg"]
 license = "GPL V3.0"
 maintainers = ["scaramallion <scaramallion@users.noreply.github.com>"]
 name = "pylibjpeg-libjpeg"
+# We want to be able to build from sdist, so include required libjpeg src
+#   But don't include any libjpeg src in the built wheels
+include = [
+    { path = "lib", format = "sdist" },
+    { path = "build_tools", format = "sdist" },
+]
+exclude = [
+    "lib/libjpeg/config.log",
+    "lib/libjpeg/config.status",
+]
 packages = [
-    {include = "libjpeg"}
+    { include = "libjpeg" },
 ]
 readme = "README.md"
 version = "2.0.0.dev0"
@@ -65,11 +68,13 @@ coverage = { version = "^7.3", optional = true }
 mypy = { version = "^1.7", optional = true }
 pytest = { version = "^7.4", optional = true }
 pytest-cov = { version = "^4.1", optional = true }
+pydicom = { version = "^2.4", optional = true }
+pylibjpeg = { git = "https://github.com/pydicom/pylibjpeg.git", optional = true}
 pylibjpeg-data = { git = "https://github.com/pydicom/pylibjpeg-data.git", optional = true}
 
 [tool.poetry.extras]
 dev = ["black", "coverage", "mypy", "pytest", "pytest-cov"]
-tests = ["coverage", "pytest", "pytest-cov", "pylibjpeg-data"]
+tests = ["coverage", "pytest", "pytest-cov", "pylibjpeg-data", "pylibjpeg", "pydicom"]
 
 [tool.poetry.plugins."pylibjpeg.jpeg_decoders"]
 libjpeg = "libjpeg:decode"
