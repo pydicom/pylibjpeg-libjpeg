@@ -2,7 +2,7 @@
 # distutils: language=c++
 
 from math import ceil
-from typing import Union, Dict, BinaryIO, Tuple
+from typing import Union, Dict, Tuple
 
 from libcpp cimport bool
 from libcpp.string cimport string
@@ -35,11 +35,10 @@ cdef extern from "decode.hpp":
 
 
 def decode(
-    src: BinaryIO,
+    src: bytes,
     colourspace: int,
     as_array: bool = False,
 ) -> Tuple[bytes, Union[bytes, np.ndarray, None], Dict[str, int]]:
-    # np.ndarray[np.uint8_t, ndim=1] input_buffer, colourspace):
     """Return the decoded JPEG data from `input_buffer`.
 
     Parameters

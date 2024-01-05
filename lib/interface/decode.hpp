@@ -1,6 +1,4 @@
 
-#include "Python.h"
-
 #include <iostream>
 #include <string>
 #include "../libjpeg/interface/types.hpp"
@@ -13,8 +11,6 @@
     extern std::string Decode(
         char *inArray,
         char *outArray,
-        // PyObject *inArray,
-        // PyObject *outArray,
         int inLength,
         int outLength,
         int colourTransform
@@ -23,7 +19,6 @@
     // Return the parameters of the encoded JPEG file in `inArray`
     extern std::string GetJPEGParameters(
         char *inArray,
-        // PyObject *inArray,
         int inLength,
         struct JPEGParameters *param
     );

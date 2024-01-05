@@ -42,18 +42,18 @@ keywords = ["dicom pydicom python jpg jpeg jpg-ls jpeg-ls libjpeg pylibjpeg"]
 license = "GPL V3.0"
 maintainers = ["scaramallion <scaramallion@users.noreply.github.com>"]
 name = "pylibjpeg-libjpeg"
-# We want to be able to build from sdist, so include required openjpeg src
-#   But don't include any openjpeg src in the built wheels
+# We want to be able to build from sdist, so include required libjpeg src
+#   But don't include any libjpeg src in the built wheels
 include = [
-    { path = "lib", format="sdist" },
-    { path = "build_tools", format="sdist" },
+    { path = "lib", format = "sdist" },
+    { path = "build_tools", format = "sdist" },
 ]
 exclude = [
-    { path = "lib/libjpeg/src/config.log" },
-    { path = "lib/libjpeg/src/config.status" },
+    "lib/libjpeg/src/config.log",
+    "lib/libjpeg/src/config.status",
 ]
 packages = [
-    {include = "libjpeg" },
+    { include = "libjpeg" },
 ]
 readme = "README.md"
 version = "2.0.0.dev0"

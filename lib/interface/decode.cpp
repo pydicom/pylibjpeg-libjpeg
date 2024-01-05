@@ -21,8 +21,6 @@
 std::string Decode(
     char *inArray,
     char *outArray,
-    // PyObject *inArray,
-    // PyObject *outArray,
     int inLength,
     int outLength,
     int colourTransform
@@ -263,7 +261,6 @@ std::string Decode(
 
 std::string GetJPEGParameters(
     char *inArray,
-    // PyObject *inArray,
     int inLength,
     struct JPEGParameters *param
 ) {
