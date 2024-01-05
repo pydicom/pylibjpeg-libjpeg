@@ -2,6 +2,7 @@
 # distutils: language=c++
 
 from math import ceil
+from typing import Union, Dict, BinaryIO, Tuple
 
 from libcpp cimport bool
 from libcpp.string cimport string
@@ -33,7 +34,12 @@ cdef extern from "decode.hpp":
     )
 
 
-def decode(np.ndarray[np.uint8_t, ndim=1] input_buffer, colourspace):
+def decode(
+    src: BinaryIO,
+    colourspace: int,
+    as_array: bool = False,
+) -> Tuple[bytes, Union[bytes, np.ndarray, None], Dict[str, int]]:
+    # np.ndarray[np.uint8_t, ndim=1] input_buffer, colourspace):
     """Return the decoded JPEG data from `input_buffer`.
 
     Parameters
@@ -46,50 +52,60 @@ def decode(np.ndarray[np.uint8_t, ndim=1] input_buffer, colourspace):
         | ``2`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_LSRCT``
         | ``2`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_RCT``
         | ``3`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_FREEFORM``
+    as_array : bool, optional
+        If ``True`` then return the decoded image data as an ndarray, otherwise
+        (default) return the decoded image data as :class:`bytearray`.
 
     Returns
     -------
-    bytes
-        The status and any error message of the decoding operation.
-    numpy.ndarray or None
-        A 1D array of ``np.uint8`` containing the decoded image data. Returns
-        ``None`` if the decode fails.
-    dict
-        A :class:`dict` containing the image parameters.
+    tuple[bytes, bytes | numpy.ndarray | None, dict]
+
+        * The status and any error message of the decoding operation.
+        * The decoded image data (if any) as either bytearray or ndarray
+        * A :class:`dict` containing the image parameters
     """
     # Get the image parameters
-    status, param = get_parameters(input_buffer)
+    status, param = get_parameters(src)
+    code, msg = status.decode("utf-8").split("::::")
+    if int(code) != 0:
+        return status, None, param
 
     # Pointer to first element in input array
-    cdef char *pInput = <char *>np.PyArray_DATA(input_buffer)
+    cdef char* p_in = <char*>src
 
     # Create array for output and get pointer to first element
     bpp = ceil(param['precision'] / 8)
     nr_bytes = (
         param['rows'] * param['columns'] * param['nr_components'] * bpp
     )
-    output_buffer = np.zeros(nr_bytes, dtype=np.uint8)
-    cdef char *pOutput = <char *>np.PyArray_DATA(output_buffer)
+
+    cdef char *p_out
+    if as_array:
+        out = np.zeros(nr_bytes, dtype=np.uint8)
+        p_out = <char *>np.PyArray_DATA(out)
+    else:
+        out = bytearray(nr_bytes)
+        p_out = <char *>out
 
     # Decode the data - output is written to output_buffer
     status = Decode(
-        pInput,
-        pOutput,
-        input_buffer.shape[0],
-        output_buffer.shape[0],
-        colourspace
+        p_in,
+        p_out,
+        len(src),
+        nr_bytes,
+        colourspace,
     )
 
-    return status, output_buffer, param
+    return status, out, param
 
 
-def get_parameters(np.ndarray[np.uint8_t, ndim=1] input_buffer):
+def get_parameters(src: bytes) -> Tuple[int, Dict[str, int]]:
     """Return a :class:`dict` containing the JPEG image parameters.
 
     Parameters
     ----------
-    input_buffer : numpy.ndarray
-        A 1D array of ``np.uint8`` containing the encoded JPEG image.
+    src : bytes
+        The encoded JPEG image.
 
     Returns
     -------
@@ -106,15 +122,10 @@ def get_parameters(np.ndarray[np.uint8_t, ndim=1] input_buffer):
     cdef JPEGParameters *pParam = &param
 
     # Pointer to first element in input array
-    cdef char *pInput = <char *>np.PyArray_DATA(input_buffer)
+    cdef char* p_in = <char*>src
 
     # Decode the data - output is written to output_buffer
-    status = GetJPEGParameters(
-        pInput,
-        input_buffer.shape[0],
-        pParam
-    )
-
+    status = GetJPEGParameters(p_in, len(src), pParam)
     parameters = {
         'rows' : param.rows,
         'columns' : param.columns,
@@ -135,7 +146,13 @@ cdef extern from "cmd/reconstruct.hpp":
     )
 
 
-def reconstruct(fin, fout, colourspace, falpha, upsample):
+def reconstruct(
+    fin: bytes,
+    fout: bytes,
+    colourspace: int,
+    falpha: Union[bytes, None],
+    upsample: bool,
+) -> None:
     """Decode the JPEG file in `fin` and write it to `fout` as PNM.
 
     Parameters

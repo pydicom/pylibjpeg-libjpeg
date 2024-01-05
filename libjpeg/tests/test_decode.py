@@ -103,7 +103,7 @@ def test_invalid_colourspace_warns():
     msg = r"no colour transformation will be applied"
     ds.PhotometricInterpretation = 'ANY'
     with pytest.warns(UserWarning, match=msg):
-        arr = decode_pixel_data(np.frombuffer(frame, 'uint8'), ds)
+        arr = decode_pixel_data(frame, ds)
 
     arr = reshape_pixel_array(ds, arr)
 
@@ -140,7 +140,7 @@ class TestDecodeDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        arr = decode(np.frombuffer(frame, 'uint8'), reshape=True)
+        arr = decode(frame, reshape=True)
 
         if info[2] == 1:
             assert (info[0], info[1]) == arr.shape
@@ -160,7 +160,7 @@ class TestDecodeDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        arr = decode(np.frombuffer(frame, 'uint8'), reshape=True)
+        arr = decode(frame, reshape=True)
 
         if info[2] == 1:
             assert (info[0], info[1]) == arr.shape
@@ -180,7 +180,7 @@ class TestDecodeDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        arr = decode(np.frombuffer(frame, 'uint8'), reshape=True)
+        arr = decode(frame, reshape=True)
 
         if info[2] == 1:
             assert (info[0], info[1]) == arr.shape
@@ -200,7 +200,7 @@ class TestDecodeDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        arr = decode(np.frombuffer(frame, 'uint8'), reshape=True)
+        arr = decode(frame, reshape=True)
 
         if info[2] == 1:
             assert (info[0], info[1]) == arr.shape
@@ -220,7 +220,7 @@ class TestDecodeDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        arr = decode(np.frombuffer(frame, 'uint8'), reshape=True)
+        arr = decode(frame, reshape=True)
 
         if info[2] == 1:
             assert (info[0], info[1]) == arr.shape
@@ -240,7 +240,7 @@ class TestDecodeDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        arr = decode(np.frombuffer(frame, 'uint8'), reshape=True)
+        arr = decode(frame, reshape=True)
 
         if info[2] == 1:
             assert (info[0], info[1]) == arr.shape
@@ -403,7 +403,7 @@ class TestDecodeJPG:
         with open(os.path.join(DIR_10918, 'p1', fname), 'rb') as fp:
             data = fp.read()
 
-        arr = decode(np.frombuffer(data, 'uint8'), reshape=True)
+        arr = decode(data, reshape=True)
         assert arr.flags.writeable
 
         if info[2] == 1:
@@ -424,7 +424,7 @@ class TestDecodeJPG:
         with open(os.path.join(DIR_10918, 'p2', fname), 'rb') as fp:
             data = fp.read()
 
-        arr = decode(np.frombuffer(data, 'uint8'), reshape=True)
+        arr = decode(data, reshape=True)
         assert arr.flags.writeable
 
         if info[2] == 1:
@@ -445,7 +445,7 @@ class TestDecodeJPG:
         with open(os.path.join(DIR_10918, 'p4', fname), 'rb') as fp:
             data = fp.read()
 
-        arr = decode(np.frombuffer(data, 'uint8'), reshape=True)
+        arr = decode(data, reshape=True)
         assert arr.flags.writeable
 
         if info[2] == 1:
@@ -468,7 +468,7 @@ class TestDecodeJPG:
         with open(os.path.join(DIR_10918, 'p14', fname), 'rb') as fp:
             data = fp.read()
 
-        arr = decode(np.frombuffer(data, 'uint8'), reshape=True)
+        arr = decode(data, reshape=True)
         assert arr.flags.writeable
 
         if info[2] == 1:
@@ -491,10 +491,7 @@ class TestDecodeJPG:
         with open(os.path.join(DIR_14495, 'JLS', fname), 'rb') as fp:
             data = fp.read()
 
-        arr = decode(
-            np.frombuffer(data, 'uint8'),
-            reshape=True,
-        )
+        arr = decode(data, reshape=True)
         assert arr.flags.writeable
 
         if info[2] == 1:
@@ -521,7 +518,7 @@ class TestDecodeJPG:
         with open(os.path.join(DIR_14495, 'JNL', fname), 'rb') as fp:
             data = fp.read()
 
-        arr = decode(np.frombuffer(data, 'uint8'), reshape=True)
+        arr = decode(data, reshape=True)
         assert arr.flags.writeable
 
         if info[2] == 1:

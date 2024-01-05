@@ -101,13 +101,6 @@ def test_non_conformant_raises():
         get_parameters(frame)
 
 
-@pytest.mark.skip("Not sure how to trigger exception")
-def test_unknown_error_raised():
-    """Test that an unknown error is handled properly."""
-    #get_parameters(b'')
-    pass
-
-
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
 class TestGetParametersDCM:
     """Tests for get_parameters() using DICOM datasets."""
@@ -124,7 +117,7 @@ class TestGetParametersDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        params = get_parameters(np.frombuffer(frame, 'uint8'))
+        params = get_parameters(frame)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -138,7 +131,7 @@ class TestGetParametersDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        params = get_parameters(np.frombuffer(frame, 'uint8'))
+        params = get_parameters(frame)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -152,7 +145,7 @@ class TestGetParametersDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        params = get_parameters(np.frombuffer(frame, 'uint8'))
+        params = get_parameters(frame)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -166,7 +159,7 @@ class TestGetParametersDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        params = get_parameters(np.frombuffer(frame, 'uint8'))
+        params = get_parameters(frame)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -180,7 +173,7 @@ class TestGetParametersDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        params = get_parameters(np.frombuffer(frame, 'uint8'))
+        params = get_parameters(frame)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -194,7 +187,7 @@ class TestGetParametersDCM:
         ds = index[fname]['ds']
 
         frame = next(self.generate_frames(ds))
-        params = get_parameters(np.frombuffer(frame, 'uint8'))
+        params = get_parameters(frame)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -260,7 +253,7 @@ class TestGetParametersJPG:
         with open(os.path.join(DIR_10918, 'p1', fname), 'rb') as fp:
             data = fp.read()
 
-        params = get_parameters(np.frombuffer(data, 'uint8'))
+        params = get_parameters(data)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -273,7 +266,7 @@ class TestGetParametersJPG:
         with open(os.path.join(DIR_10918, 'p2', fname), 'rb') as fp:
             data = fp.read()
 
-        params = get_parameters(np.frombuffer(data, 'uint8'))
+        params = get_parameters(data)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -286,7 +279,7 @@ class TestGetParametersJPG:
         with open(os.path.join(DIR_10918, 'p4', fname), 'rb') as fp:
             data = fp.read()
 
-        params = get_parameters(np.frombuffer(data, 'uint8'))
+        params = get_parameters(data)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -299,7 +292,7 @@ class TestGetParametersJPG:
         with open(os.path.join(DIR_10918, 'p14', fname), 'rb') as fp:
             data = fp.read()
 
-        params = get_parameters(np.frombuffer(data, 'uint8'))
+        params = get_parameters(data)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]
@@ -312,7 +305,7 @@ class TestGetParametersJPG:
         with open(os.path.join(DIR_14495, 'JLS', fname), 'rb') as fp:
             data = fp.read()
 
-        params = get_parameters(np.frombuffer(data, 'uint8'))
+        params = get_parameters(data)
 
         assert (info[0], info[1]) == (params['rows'], params['columns'])
         assert info[2] == params["nr_components"]

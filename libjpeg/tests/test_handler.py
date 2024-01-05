@@ -70,15 +70,7 @@ class TestLibrary:
             r"Invalid colourTransform value"
         )
         with pytest.raises(RuntimeError, match=msg):
-            decode(np.frombuffer(data, 'uint8'), -1)
-
-    def test_invalid_buffer(self):
-        """Test that an invalid colour transform raises an exception."""
-        msg = (
-            r"Buffer dtype mismatch, expected 'uint8_t' but got 'double'"
-        )
-        with pytest.raises(ValueError, match=msg):
-            decode(np.zeros(1), 'YBR_FULL')
+            decode(data, -1)
 
 
 # ISO/IEC 10918 JPEG

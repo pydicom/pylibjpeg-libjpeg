@@ -3,9 +3,9 @@ name: release-deploy
 on:
   release:
     types: [ published ]
-  # push:
-  #   branches: [ main ]
-  # pull_request:
+  push:
+    branches: [ main ]
+  pull_request:
 
 jobs:
   build-sdist:
@@ -31,7 +31,7 @@ jobs:
     - name: Store artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: wheels
+        name: sdist
         path: ./dist
 
   build-wheels:
@@ -184,7 +184,7 @@ jobs:
     - name: Store artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: wheels
+        name: wheel-${{ matrix.python }}-${{ matrix.platform_id }}
         path: ./dist
 
   test-package:
@@ -206,8 +206,8 @@ jobs:
     - name: Download the wheels
       uses: actions/download-artifact@v3
       with:
-        name: wheels
         path: dist/
+        merge-multiple: true
 
     - name: Install from package wheels and test
       # If testing wheel builds might need --pre to install dev version
@@ -239,21 +239,21 @@ jobs:
   # The pypi upload fails with non-linux containers, so grab the uploaded
   #     artifacts and run using those
   # See: https://github.com/pypa/gh-action-pypi-publish/discussions/15
-  deploy:
-    name: Upload wheels to PyPI
-    needs: [ test-package ]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-    - name: Download the wheels
-      uses: actions/download-artifact@v3
-      with:
-        name: wheels
-        path: dist/
-
-    - name: Publish package to PyPi
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_PASSWORD }}
+  # deploy:
+  #   name: Upload wheels to PyPI
+  #   needs: [ test-package ]
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 10
+  #
+  #   steps:
+  #   - name: Download the wheels
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: wheels
+  #       path: dist/
+  #
+  #   - name: Publish package to PyPi
+  #     uses: pypa/gh-action-pypi-publish@master
+  #     with:
+  #       user: __token__
+  #       password: ${{ secrets.PYPI_PASSWORD }}
