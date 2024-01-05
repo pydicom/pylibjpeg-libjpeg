@@ -1,15 +1,18 @@
-
 import enum
 from io import BytesIO
 from math import ceil
 import os
 from pathlib import Path
-from typing import Union, BinaryIO, Any, Dict
+from typing import Union, BinaryIO, Any, Dict, cast, TYPE_CHECKING
 import warnings
 
 import numpy as np
 
 import _libjpeg
+
+
+if TYPE_CHECKING:  # pragma: no cover
+    from pydicom.dataset import Dataset
 
 
 class Version(enum.IntEnum):
@@ -18,55 +21,53 @@ class Version(enum.IntEnum):
 
 
 COLOURSPACE = {
-    'MONOCHROME1': 0,
-    'MONOCHROME2' : 0,
-    'RGB' : 1,
-    'YBR_FULL' : 0,
-    'YBR_FULL_422' : 0,
+    "MONOCHROME1": 0,
+    "MONOCHROME2": 0,
+    "RGB": 1,
+    "YBR_FULL": 0,
+    "YBR_FULL_422": 0,
 }
 
 
 LIBJPEG_ERROR_CODES = {
-    -1024 : "A parameter for a function was out of range",
-    -1025 : "Stream run out of data",
-    -1026 : "A code block run out of data",
-    -1027 : "Tried to perform an unputc or or an unget on an empty stream",
-    -1028 : "Some parameter run out of range",
-    -1029 : "The requested operation does not apply",
-    -1030 : "Tried to create an already existing object",
-    -1031 : "Tried to access a non-existing object",
-    -1032 : "A non-optional parameter was left out",
-    -1033 : "Forgot to delay a 0xFF",
-    -1034 : (
-        "Internal error: the requested operation is not available"
-    ),
-    -1035 : (
+    -1024: "A parameter for a function was out of range",
+    -1025: "Stream run out of data",
+    -1026: "A code block run out of data",
+    -1027: "Tried to perform an unputc or or an unget on an empty stream",
+    -1028: "Some parameter run out of range",
+    -1029: "The requested operation does not apply",
+    -1030: "Tried to create an already existing object",
+    -1031: "Tried to access a non-existing object",
+    -1032: "A non-optional parameter was left out",
+    -1033: "Forgot to delay a 0xFF",
+    -1034: ("Internal error: the requested operation is not available"),
+    -1035: (
         "Internal error: an item computed on a former pass does not "
         "coincide with the same item on a later pass"
     ),
-    -1036 : "The stream passed in is no valid jpeg stream",
-    -1037 : (
+    -1036: "The stream passed in is no valid jpeg stream",
+    -1037: (
         "A unique marker turned up more than once. The input stream is "
         "most likely corrupt"
     ),
-    -1038 : "A misplaced marker segment was found",
-    -1040 : (
+    -1038: "A misplaced marker segment was found",
+    -1040: (
         "The specified parameters are valid, but are not supported by "
         "the selected profile. Either use a higher profile, or use "
         "simpler parameters (encoder only). "
     ),
-    -1041 : (
+    -1041: (
         "Internal error: the worker thread that was currently active had "
         "to terminate unexpectedly"
     ),
-    -1042 : (
+    -1042: (
         "The encoder tried to emit a symbol for which no Huffman code "
         "was defined. This happens if the standard Huffman table is used "
         "for an alphabet for which it was not defined. The reaction "
         "to this exception should be to create a custom huffman table "
         "instead"
     ),
-    -2046 : "Failed to construct the JPEG object",
+    -2046: "Failed to construct the JPEG object",
 }
 
 
@@ -108,12 +109,13 @@ def decode(
         If the decoding failed.
     """
     if isinstance(stream, (str, Path)):
-        with open(stream, 'rb') as f:
+        with open(stream, "rb") as f:
             buffer = f.read()
     elif isinstance(stream, (bytes, bytearray)):
         buffer = stream
     else:
         # BinaryIO
+        stream = cast(BinaryIO, stream)
         required_methods = ["read", "tell", "seek"]
         if not all([hasattr(stream, meth) for meth in required_methods]):
             raise TypeError(
@@ -121,8 +123,6 @@ def decode(
                 "either be bytes or have read(), tell() and seek() methods."
             )
         buffer = stream.read()
-
-    # ----------
 
     status, out, params = _libjpeg.decode(buffer, colour_transform, as_array=True)
     status = status.decode("utf-8")
@@ -132,16 +132,16 @@ def decode(
     if code == 0 and reshape:
         bpp = ceil(params["precision"] / 8)
         if bpp == 2:
-            out = out.view('uint16')
+            out = out.view("uint16")
 
-        shape = [params['rows'], params['columns']]
+        shape = [params["rows"], params["columns"]]
         if params["nr_components"] > 1:
             shape.append(params["nr_components"])
 
-        return out.reshape(*shape)
+        return cast(np.ndarray, out.reshape(*shape))
 
     if code == 0 and not reshape:
-        return out
+        return cast(np.ndarray, out)
 
     if code in LIBJPEG_ERROR_CODES:
         raise RuntimeError(
@@ -149,9 +149,7 @@ def decode(
             f"{LIBJPEG_ERROR_CODES[code]} - {msg}"
         )
 
-    raise RuntimeError(
-        f"Unknown error code '{code}' returned from Decode(): {msg}"
-    )
+    raise RuntimeError(f"Unknown error code '{code}' returned from Decode(): {msg}")
 
 
 def decode_pixel_data(
@@ -221,7 +219,7 @@ def decode_pixel_data(
     code = int(code)
 
     if code == 0:
-        return out
+        return cast(bytearray, out)
 
     if code in LIBJPEG_ERROR_CODES:
         raise RuntimeError(
@@ -229,9 +227,7 @@ def decode_pixel_data(
             f"{LIBJPEG_ERROR_CODES[code]} - {msg}"
         )
 
-    raise RuntimeError(
-        f"Unknown error code '{code}' returned from decode(): {msg}"
-    )
+    raise RuntimeError(f"Unknown error code '{code}' returned from decode(): {msg}")
 
 
 def get_parameters(
@@ -267,6 +263,7 @@ def get_parameters(
     elif isinstance(stream, (bytes, bytearray)):
         buffer = stream
     else:
+        stream = cast(BinaryIO, stream)
         buffer = stream.read()
 
     status, params = _libjpeg.get_parameters(buffer)
@@ -275,7 +272,7 @@ def get_parameters(
     code = int(code)
 
     if code == 0:
-        return params
+        return cast(Dict[str, int], params)
 
     if code in LIBJPEG_ERROR_CODES:
         raise RuntimeError(
@@ -288,7 +285,13 @@ def get_parameters(
     )
 
 
-def reconstruct(fin, fout, colourspace=1, falpha=None, upsample=True):
+def reconstruct(
+    fin: Union[str, os.PathLike, bytes],
+    fout: Union[str, os.PathLike, bytes],
+    colourspace: int = 1,
+    falpha: Union[bytes, None] = None,
+    upsample: bool = True,
+) -> None:
     """Simple wrapper for the libjpeg ``cmd/reconstruct::Reconstruct()``
     function.
 
@@ -317,14 +320,14 @@ def reconstruct(fin, fout, colourspace=1, falpha=None, upsample=True):
     """
     if isinstance(fin, (str, Path)):
         fin = str(fin)
-        fin = bytes(fin, 'utf-8')
+        fin = bytes(fin, "utf-8")
 
     if isinstance(fout, (str, Path)):
         fout = str(fout)
-        fout = bytes(fout, 'utf-8')
+        fout = bytes(fout, "utf-8")
 
     if falpha and isinstance(falpha, (str, Path)):
         falpha = str(falpha)
-        falpha = bytes(falpha, 'utf-8')
+        falpha = bytes(falpha, "utf-8")
 
     _libjpeg.reconstruct(fin, fout, colourspace, falpha, upsample)

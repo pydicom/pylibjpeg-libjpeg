@@ -49,8 +49,8 @@ include = [
     { path = "build_tools", format = "sdist" },
 ]
 exclude = [
-    "lib/libjpeg/src/config.log",
-    "lib/libjpeg/src/config.status",
+    "lib/libjpeg/config.log",
+    "lib/libjpeg/config.status",
 ]
 packages = [
     { include = "libjpeg" },

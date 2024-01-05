@@ -76,9 +76,6 @@ def get_mscv_args() -> List[str]:
         '/Zc:wchar_t',  # Use windows char type
         '/Zc:inline',  # Remove unreferenced function or data (...)
         '/Zc:forScope',
-        # '/Zc:__cplusplus',  # MSVC > 1914
-        # '/Zc:throwingNew',  # only standard throwing operator new is used
-        # '/utf-8',  # MSVC requires utf-8 to read them as utf-8
         '/Od',  # Disable optimisation
         '/Oy-',  # (x86 only) don't omit frame pointer
         '/openmp-',  # Disable #pragma omp directive
