@@ -21,8 +21,8 @@
 std::string Decode(
     char *inArray,
     char *outArray,
-    unsigned int inLength,
-    unsigned int outLength,
+    int inLength,
+    int outLength,
     int colourTransform
 ) {
     /*
