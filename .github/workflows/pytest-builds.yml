@@ -44,85 +44,85 @@ jobs:
         pip uninstall -y pylibjpeg-openjpeg
         pytest --ignore=libjpeg/src/libjpeg
 
-  # osx:
-  #   runs-on: macos-latest
-  #   timeout-minutes: 30
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
-  #
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #     with:
-  #       submodules: true
-  #
-  #   - name: Set up Python ${{ matrix.python-version }}
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: ${{ matrix.python-version }}
-  #
-  #   - name: Install package and dependencies
-  #     run: |
-  #       python --version
-  #       python -m pip install -U pip
-  #       python -m pip install -U pytest
-  #       python -m pip install git+https://github.com/pydicom/pylibjpeg-data
-  #       python -m pip install .
-  #
-  #   - name: Run pytest
-  #     run: |
-  #       pytest --ignore=libjpeg/src/libjpeg
-  #
-  #   - name: Install pydicom release and rerun pytest
-  #     run: |
-  #       pip install pydicom pylibjpeg
-  #       pip uninstall -y pylibjpeg-openjpeg
-  #       pytest --ignore=libjpeg/src/libjpeg
-  #
-  # ubuntu:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
-  #
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #     with:
-  #       submodules: true
-  #
-  #   - name: Set up Python ${{ matrix.python-version }}
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: ${{ matrix.python-version }}
-  #
-  #   - name: Install package and dependencies
-  #     run: |
-  #       python --version
-  #       python -m pip install -U pip
-  #       python -m pip install -U pytest coverage pytest-cov
-  #       python -m pip install git+https://github.com/pydicom/pylibjpeg-data
-  #       python -m pip install .
-  #
-  #   - name: Run pytest
-  #     run: |
-  #       pytest --cov=libjpeg libjpeg/tests
-  #
-  #   - name: Install pydicom release and rerun pytest
-  #     run: |
-  #       pip install pydicom pylibjpeg
-  #       pip uninstall -y pylibjpeg-openjpeg
-  #       pytest --cov=libjpeg --cov-append libjpeg/tests
-  #
-  #   - name: Switch to pydicom dev and rerun pytest
-  #     if: ${{ contains('3.10 3.11 3.12', matrix.python-version) }}
-  #     run: |
-  #       pip uninstall -y pydicom
-  #       pip install git+https://github.com/pydicom/pydicom
-  #       pytest --cov=libjpeg --cov-append libjpeg/tests
-  #
-  #   - name: Send coverage results
-  #     if: ${{ success() && matrix.coverage == 'coverage' }}
-  #     uses: codecov/codecov-action@v3
+  osx:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install package and dependencies
+      run: |
+        python --version
+        python -m pip install -U pip
+        python -m pip install -U pytest
+        python -m pip install git+https://github.com/pydicom/pylibjpeg-data
+        python -m pip install .
+
+    - name: Run pytest
+      run: |
+        pytest --ignore=libjpeg/src/libjpeg
+
+    - name: Install pydicom release and rerun pytest
+      run: |
+        pip install pydicom pylibjpeg
+        pip uninstall -y pylibjpeg-openjpeg
+        pytest --ignore=libjpeg/src/libjpeg
+
+  ubuntu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install package and dependencies
+      run: |
+        python --version
+        python -m pip install -U pip
+        python -m pip install -U pytest coverage pytest-cov
+        python -m pip install git+https://github.com/pydicom/pylibjpeg-data
+        python -m pip install .
+
+    - name: Run pytest
+      run: |
+        pytest --cov=libjpeg libjpeg/tests
+
+    - name: Install pydicom release and rerun pytest
+      run: |
+        pip install pydicom pylibjpeg
+        pip uninstall -y pylibjpeg-openjpeg
+        pytest --cov=libjpeg --cov-append libjpeg/tests
+
+    - name: Switch to pydicom dev and rerun pytest
+      if: ${{ contains('3.10 3.11 3.12', matrix.python-version) }}
+      run: |
+        pip uninstall -y pydicom
+        pip install git+https://github.com/pydicom/pydicom
+        pytest --cov=libjpeg --cov-append libjpeg/tests
+
+    - name: Send coverage results
+      if: ${{ success() && matrix.coverage == 'coverage' }}
+      uses: codecov/codecov-action@v3
