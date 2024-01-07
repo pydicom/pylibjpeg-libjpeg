@@ -124,5 +124,5 @@ jobs:
         pytest --cov=libjpeg --cov-append libjpeg/tests
 
     - name: Send coverage results
-      if: ${{ success() && matrix.coverage == 'coverage' }}
+      if: ${{ success() }}
       uses: codecov/codecov-action@v3

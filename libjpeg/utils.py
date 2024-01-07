@@ -1,5 +1,4 @@
 import enum
-from io import BytesIO
 from math import ceil
 import os
 from pathlib import Path

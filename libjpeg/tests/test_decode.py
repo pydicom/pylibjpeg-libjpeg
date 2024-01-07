@@ -1,15 +1,12 @@
 """Tests for pylibjpeg.decode()."""
 
-from io import BytesIO
 import os
 from pathlib import Path
 import pytest
-import warnings
 
 import numpy as np
 
 try:
-    import pydicom
     from pydicom.encaps import generate_pixel_data_frame
     from pydicom.pixel_data_handlers.util import reshape_pixel_array
 
@@ -215,7 +212,7 @@ class TestDecodeDCM:
             assert arr.dtype == "uint16"
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.80"])
-    def test_extended(self, fname, info):
+    def test_jls_lossless(self, fname, info):
         """Test get_parameters() for the LS lossless datasets."""
         # info: (rows, columns, spp, bps)
         index = get_indexed_datasets("1.2.840.10008.1.2.4.80")
@@ -235,7 +232,7 @@ class TestDecodeDCM:
             assert arr.dtype == "uint16"
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.81"])
-    def test_extended(self, fname, info):
+    def test_jls(self, fname, info):
         """Test get_parameters() for the LS lossy datasets."""
         # info: (rows, columns, spp, bps)
         index = get_indexed_datasets("1.2.840.10008.1.2.4.81")

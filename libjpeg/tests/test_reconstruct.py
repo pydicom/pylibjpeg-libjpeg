@@ -1,6 +1,5 @@
 """Tests for the pylibjpeg pixel data handler."""
 
-from io import BytesIO
 import os
 import tempfile
 from tempfile import NamedTemporaryFile

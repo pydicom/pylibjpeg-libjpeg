@@ -1,13 +1,8 @@
 """Tests for the pylibjpeg pixel data handler."""
 
 import pytest
-import warnings
-
-import numpy as np
 
 try:
-    import pydicom
-    import pydicom.config
     from pydicom.pixel_data_handlers.util import convert_color_space
     from pydicom.encaps import defragment_data
 
@@ -1010,7 +1005,7 @@ class TestJPEG2000Lossless(HandlerTestBase):
             r"plugin is not installed"
         )
         with pytest.raises(RuntimeError, match=msg):
-            arr = ds.pixel_array
+            ds.pixel_array
 
 
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No dependencies")
@@ -1038,4 +1033,4 @@ class TestJPEG2000(HandlerTestBase):
             r"plugin is not installed"
         )
         with pytest.raises(RuntimeError, match=msg):
-            arr = ds.pixel_array
+            ds.pixel_array
