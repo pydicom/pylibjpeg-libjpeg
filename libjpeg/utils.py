@@ -118,8 +118,9 @@ def decode(
         required_methods = ["read", "tell", "seek"]
         if not all([hasattr(stream, meth) for meth in required_methods]):
             raise TypeError(
-                "The Python object containing the encoded JPEG 2000 data must "
-                "either be bytes or have read(), tell() and seek() methods."
+                f"Invalid type '{type(stream).__name__}' - must be the path "
+                "to a JPEG file, a buffer containing the JPEG data or an open "
+                "JPEG file-like"
             )
         buffer = stream.read()
 
@@ -222,11 +223,11 @@ def decode_pixel_data(
 
     if code in LIBJPEG_ERROR_CODES:
         raise RuntimeError(
-            f"libjpeg error code '{code}' returned from decode(): "
+            f"libjpeg error code '{code}' returned from Decode(): "
             f"{LIBJPEG_ERROR_CODES[code]} - {msg}"
         )
 
-    raise RuntimeError(f"Unknown error code '{code}' returned from decode(): {msg}")
+    raise RuntimeError(f"Unknown error code '{code}' returned from Decode(): {msg}")
 
 
 def get_parameters(
@@ -280,53 +281,5 @@ def get_parameters(
         )
 
     raise RuntimeError(
-        f"Unknown error code '{status}' returned from GetJPEGParameters(): {msg}"
+        f"Unknown error code '{code}' returned from GetJPEGParameters(): {msg}"
     )
-
-
-def reconstruct(
-    fin: Union[str, os.PathLike, bytes],
-    fout: Union[str, os.PathLike, bytes],
-    colourspace: int = 1,
-    falpha: Union[bytes, None] = None,
-    upsample: bool = True,
-) -> None:
-    """Simple wrapper for the libjpeg ``cmd/reconstruct::Reconstruct()``
-    function.
-
-    Parameters
-    ----------
-    fin : bytes
-        The path to the JPEG file to be decoded.
-    fout : bytes
-        The path to the decoded PPM or PGM (if `falpha` is ``True``) file(s).
-    colourspace : int, optional
-        The colourspace transform to apply.
-        | ``0`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_NONE``  (``-c`` flag)
-        | ``1`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_YCBCR`` (default)
-        | ``2`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_LSRCT`` (``-cls`` flag)
-        | ``2`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_RCT``
-        | ``3`` : ``JPGFLAG_MATRIX_COLORTRANSFORMATION_FREEFORM``
-        See `here<https://github.com/thorfdbg/libjpeg/blob/87636f3b26b41b85b2fb7355c589a8c456ef808c/interface/parameters.hpp#L381>`_
-        for more information.
-    falpha : bytes, optional
-        The path where any decoded alpha channel data will be written (as a
-        PGM file), otherwise ``None`` (default) to not write alpha channel
-        data. Equivalent to the ``-al file`` flag.
-    upsample : bool, optional
-        ``True`` (default) to disable automatic upsampling, equivalent to
-        the ``-U`` flag.
-    """
-    if isinstance(fin, (str, Path)):
-        fin = str(fin)
-        fin = bytes(fin, "utf-8")
-
-    if isinstance(fout, (str, Path)):
-        fout = str(fout)
-        fout = bytes(fout, "utf-8")
-
-    if falpha and isinstance(falpha, (str, Path)):
-        falpha = str(falpha)
-        falpha = bytes(falpha, "utf-8")
-
-    _libjpeg.reconstruct(fin, fout, colourspace, falpha, upsample)

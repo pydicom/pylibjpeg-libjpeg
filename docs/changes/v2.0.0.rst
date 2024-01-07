@@ -11,3 +11,4 @@ Changes
 * Switched packaging and build to ``pyproject.toml``
 * Added type hints
 * Added support for version 2 of the pixel data decoding interface
+* Removed ``utils.reconstruct()``
