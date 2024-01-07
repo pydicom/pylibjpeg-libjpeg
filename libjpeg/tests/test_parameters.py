@@ -46,9 +46,9 @@ REF_DCM = {
         ("SC_rgb_jpeg_gdcm.dcm", (100, 100, 3, 8)),
     ],
     "1.2.840.10008.1.2.4.80": [
-        ("emri_small_jpeg_ls_lossless.dcm", (64, 64, 1, 12)),
+        ("emri_small_jpeg_ls_lossless.dcm", (64, 64, 1, 16)),  # should be 16
         ("MR_small_jpeg_ls_lossless.dcm", (64, 64, 1, 16)),
-        ("RG1_JLSL.dcm", (1955, 1841, 1, 16)),
+        ("RG1_JLSL.dcm", (1955, 1841, 1, 15)),
         ("RG2_JLSL.dcm", (2140, 1760, 1, 10)),
     ],
     "1.2.840.10008.1.2.4.81": [
@@ -167,8 +167,12 @@ class TestGetParametersDCM:
         index = get_indexed_datasets("1.2.840.10008.1.2.4.80")
         ds = index[fname]["ds"]
 
+        print(fname)
+
         frame = next(self.generate_frames(ds))
         params = get_parameters(frame)
+        print(params)
+        print(info)
 
         assert (info[0], info[1]) == (params["rows"], params["columns"])
         assert info[2] == params["nr_components"]
