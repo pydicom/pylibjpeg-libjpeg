@@ -10,7 +10,8 @@ try:
 except ImportError:
     HAS_PYDICOM = False
 
-from libjpeg import decode
+from libjpeg import decode, decode_pixel_data
+from libjpeg.utils import COLOURSPACE
 from libjpeg.data import get_indexed_datasets
 
 
@@ -39,6 +40,13 @@ class HandlerTestBase:
         plt.show()
 
 
+@pytest.fixture
+def add_invalid_colour():
+    COLOURSPACE["INVALID"] = -1
+    yield
+    del COLOURSPACE["INVALID"]
+
+
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No dependencies")
 class TestLibrary:
     """Tests for libjpeg itself."""
@@ -57,7 +65,7 @@ class TestLibrary:
         with pytest.raises(RuntimeError, match=msg):
             item["ds"].pixel_array
 
-    def test_invalid_colour_transform(self):
+    def test_invalid_colour_transform(self, add_invalid_colour):
         """Test that an invalid colour transform raises an exception."""
         ds_list = get_indexed_datasets("1.2.840.10008.1.2.4.50")
         # Image has invalid Se value in the SOS marker segment
@@ -69,6 +77,13 @@ class TestLibrary:
         )
         with pytest.raises(RuntimeError, match=msg):
             decode(data, -1)
+
+        with pytest.raises(RuntimeError, match=msg):
+            decode_pixel_data(
+                data,
+                photometric_interpretation="INVALID",
+                version=2,
+            )
 
 
 # ISO/IEC 10918 JPEG

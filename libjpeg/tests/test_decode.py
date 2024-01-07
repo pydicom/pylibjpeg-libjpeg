@@ -90,6 +90,35 @@ def test_decode_bytes():
     assert 255 == arr[95, 50]
 
 
+def test_decode_binaryio():
+    """Test decode using binaryio."""
+    with open(DIR_10918 / "p1" / "A1.JPG", "rb") as f:
+        arr = decode(f)
+        assert arr.flags.writeable
+        assert "uint8" == arr.dtype
+        assert arr.shape == (257, 255, 4)
+
+
+def test_decode_raises():
+    """Test decode raises if invalid type"""
+    msg = (
+        "Invalid type 'NoneType' - must be the path to a JPEG file, a "
+        "buffer containing the JPEG data or an open JPEG file-like"
+    )
+    with pytest.raises(TypeError, match=msg):
+        decode(None)
+
+
+def test_v1_invalid_photometric_raises():
+    """Test decode_pixel_data raises if invalid photometric interpretation"""
+    msg = (
+        r"The \(0028,0004\) Photometric Interpretation element is missing "
+        "from the dataset"
+    )
+    with pytest.raises(ValueError, match=msg):
+        decode_pixel_data(DIR_10918 / "p1" / "A1.JPG", version=1)
+
+
 # TODO: convert to using straight JPG data
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
 def test_invalid_colourspace_warns():
@@ -261,7 +290,7 @@ class TestDecodeDCM:
         nr_frames = ds.get("NumberOfFrames", 1)
         frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
         msg = (
-            r"libjpeg error code '-1038' returned from decode\(\): A "
+            r"libjpeg error code '-1038' returned from Decode\(\): A "
             r"misplaced marker segment was found - scan start must be zero "
             r"and scan stop must be 63 for the sequential operating modes"
         )

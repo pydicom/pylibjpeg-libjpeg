@@ -12,6 +12,7 @@ except ImportError:
 
 from libjpeg import get_parameters
 from libjpeg.data import get_indexed_datasets, JPEG_DIRECTORY
+from libjpeg.utils import LIBJPEG_ERROR_CODES
 
 
 DIR_10918 = os.path.join(JPEG_DIRECTORY, "10918")
@@ -72,6 +73,47 @@ def test_get_parameters_bytes():
     assert (info[0], info[1]) == (params["rows"], params["columns"])
     assert info[2] == params["nr_components"]
     assert info[3] == params["precision"]
+
+
+def test_get_parameters_binary():
+    """Test get_parameters() using binaryio."""
+    with open(os.path.join(DIR_10918, "p1", "A1.JPG"), "rb") as f:
+        params = get_parameters(f)
+
+    info = (257, 255, 4, 8)
+
+    assert (info[0], info[1]) == (params["rows"], params["columns"])
+    assert info[2] == params["nr_components"]
+    assert info[3] == params["precision"]
+
+
+def test_get_parameters_path():
+    """Test get_parameters() using a path."""
+    params = get_parameters(os.path.join(DIR_10918, "p1", "A1.JPG"))
+
+    info = (257, 255, 4, 8)
+
+    assert (info[0], info[1]) == (params["rows"], params["columns"])
+    assert info[2] == params["nr_components"]
+    assert info[3] == params["precision"]
+
+@pytest.fixture
+def remove_error_code():
+    msg = LIBJPEG_ERROR_CODES[-1038]
+    del LIBJPEG_ERROR_CODES[-1038]
+    yield
+    LIBJPEG_ERROR_CODES[-1038] = msg
+
+
+@pytest.mark.skipif(not HAS_PYDICOM, reason="No dependencies")
+def test_get_parameters_unknown_error(remove_error_code):
+    """Test get_parameters() using a path."""
+    msg = (
+        r"Unknown error code '-1038' returned from GetJPEGParameters\(\): "
+        r"unexpected EOF while parsing the image"
+    )
+    with pytest.raises(RuntimeError, match=msg):
+        get_parameters(b"\xFF\xD8\xFF\xD8\x01\x02\x03")
 
 
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
@@ -166,13 +208,8 @@ class TestGetParametersDCM:
         # info: (rows, columns, spp, bps)
         index = get_indexed_datasets("1.2.840.10008.1.2.4.80")
         ds = index[fname]["ds"]
-
-        print(fname)
-
         frame = next(self.generate_frames(ds))
         params = get_parameters(frame)
-        print(params)
-        print(info)
 
         assert (info[0], info[1]) == (params["rows"], params["columns"])
         assert info[2] == params["nr_components"]
@@ -184,7 +221,6 @@ class TestGetParametersDCM:
         # info: (rows, columns, spp, bps)
         index = get_indexed_datasets("1.2.840.10008.1.2.4.81")
         ds = index[fname]["ds"]
-
         frame = next(self.generate_frames(ds))
         params = get_parameters(frame)
 
