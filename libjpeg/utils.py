@@ -22,9 +22,9 @@ class Version(enum.IntEnum):
 COLOURSPACE = {
     "MONOCHROME1": 0,
     "MONOCHROME2": 0,
-    "RGB": 0,
-    "YBR_FULL": 1,
-    "YBR_FULL_422": 1,
+    "RGB": 1,
+    "YBR_FULL": 0,
+    "YBR_FULL_422": 0,
 }
 
 
