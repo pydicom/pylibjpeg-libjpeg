@@ -3,12 +3,15 @@
 2.0.0
 =====
 
-Changes
-.......
-
 * Drop support for Python 3.7
 * Add supports for Python 3.11 and 3.12
 * Switched packaging and build to ``pyproject.toml``
 * Added type hints
 * Added support for version 2 of the pixel data decoding interface
 * Removed ``utils.reconstruct()``
+
+
+2.0.1
+=====
+
+* Don't apply any colour transformations when using ``decode_pixel_data()``
