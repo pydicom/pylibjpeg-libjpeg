@@ -22,9 +22,9 @@ class Version(enum.IntEnum):
 COLOURSPACE = {
     "MONOCHROME1": 0,
     "MONOCHROME2": 0,
-    "RGB": 1,
-    "YBR_FULL": 0,
-    "YBR_FULL_422": 0,
+    "RGB": 0,
+    "YBR_FULL": 1,
+    "YBR_FULL_422": 1,
 }
 
 
@@ -210,10 +210,7 @@ def decode_pixel_data(
         return decode(src, transform, reshape=False)
 
     # Version 2
-    photometric_interpretation = kwargs.get("photometric_interpretation", None)
-    colour_transform = COLOURSPACE.get(photometric_interpretation, 0)
-
-    status, out, params = _libjpeg.decode(src, colour_transform, as_array=False)
+    status, out, params = _libjpeg.decode(src, colourspace=0, as_array=False)
     status = status.decode("utf-8")
     code, msg = status.split("::::")
     code = int(code)
