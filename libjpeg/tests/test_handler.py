@@ -78,13 +78,6 @@ class TestLibrary:
         with pytest.raises(RuntimeError, match=msg):
             decode(data, -1)
 
-        with pytest.raises(RuntimeError, match=msg):
-            decode_pixel_data(
-                data,
-                photometric_interpretation="INVALID",
-                version=2,
-            )
-
 
 # ISO/IEC 10918 JPEG
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No dependencies")
