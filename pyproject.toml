@@ -56,7 +56,7 @@ packages = [
     { include = "libjpeg" },
 ]
 readme = "README.md"
-version = "2.0.1"
+version = "2.0.2"
 
 [tool.poetry.dependencies]
 python = "^3.8"
