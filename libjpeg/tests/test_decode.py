@@ -152,6 +152,16 @@ def test_invalid_colourspace_warns():
 
 
 @pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
+def test_decode_adobe_v101():
+    """Test decoding JPEG with Adobe v101 APP14 marker."""
+    index = get_indexed_datasets("1.2.840.10008.1.2.4.50")
+    ds = index["SC_jpeg_no_color_transform_2.dcm"]["ds"]
+    frame = next(generate_pixel_data_frame(ds.PixelData, 1))
+    arr = decode(frame, reshape=True)
+    assert arr.shape == (256, 256, 3)
+
+
+@pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
 class TestDecodeDCM:
     """Tests for get_parameters() using DICOM datasets."""
 
