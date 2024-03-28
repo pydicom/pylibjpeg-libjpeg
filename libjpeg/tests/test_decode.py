@@ -151,6 +151,7 @@ def test_invalid_colourspace_warns():
     assert 255 == arr[95, 50]
 
 
+@pytest.mark.skipif(not HAS_PYDICOM, reason="No pydicom")
 def test_decode_adobe_v101():
     """Test decoding JPEG with Adobe v101 APP14 marker."""
     index = get_indexed_datasets("1.2.840.10008.1.2.4.50")
