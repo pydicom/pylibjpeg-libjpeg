@@ -4,7 +4,7 @@ import os
 import pytest
 
 try:
-    from pydicom.encaps import generate_pixel_data_frame
+    from pydicom.encaps import generate_frames
 
     HAS_PYDICOM = True
 except ImportError:
@@ -126,7 +126,7 @@ def test_non_conformant_raises():
     ds = item["ds"]
 
     nr_frames = ds.get("NumberOfFrames", 1)
-    frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
+    frame = next(generate_frames(ds.PixelData, number_of_frames=nr_frames))
 
     msg = (
         r"libjpeg error code '-1038' returned from GetJPEGParameters\(\): A "
@@ -144,7 +144,7 @@ class TestGetParametersDCM:
     def generate_frames(self, ds):
         """Return a generator object with the dataset's pixel data frames."""
         nr_frames = ds.get("NumberOfFrames", 1)
-        return generate_pixel_data_frame(ds.PixelData, nr_frames)
+        return generate_frames(ds.PixelData, number_of_frames=nr_frames)
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.50"])
     def test_baseline(self, fname, info):

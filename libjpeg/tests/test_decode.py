@@ -7,8 +7,8 @@ import pytest
 import numpy as np
 
 try:
-    from pydicom.encaps import generate_pixel_data_frame
-    from pydicom.pixel_data_handlers.util import reshape_pixel_array
+    from pydicom.encaps import generate_frames
+    from pydicom.pixels.utils import reshape_pixel_array
 
     HAS_PYDICOM = True
 except ImportError:
@@ -71,7 +71,7 @@ def test_decode_bytes():
     index = get_indexed_datasets("1.2.840.10008.1.2.4.50")
     ds = index["JPEGBaseline_1s_1f_u_08_08.dcm"]["ds"]
     nr_frames = ds.get("NumberOfFrames", 1)
-    frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
+    frame = next(generate_frames(ds.PixelData, number_of_frames=nr_frames))
     arr = decode(frame)
     assert arr.flags.writeable
     assert "uint8" == arr.dtype
@@ -126,7 +126,7 @@ def test_invalid_colourspace_warns():
     index = get_indexed_datasets("1.2.840.10008.1.2.4.50")
     ds = index["JPEGBaseline_1s_1f_u_08_08.dcm"]["ds"]
     nr_frames = ds.get("NumberOfFrames", 1)
-    frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
+    frame = next(generate_frames(ds.PixelData, number_of_frames=nr_frames))
     msg = r"no colour transformation will be applied"
     ds.PhotometricInterpretation = "ANY"
     with pytest.warns(UserWarning, match=msg):
@@ -156,7 +156,7 @@ def test_decode_adobe_v101():
     """Test decoding JPEG with Adobe v101 APP14 marker."""
     index = get_indexed_datasets("1.2.840.10008.1.2.4.50")
     ds = index["SC_jpeg_no_color_transform_2.dcm"]["ds"]
-    frame = next(generate_pixel_data_frame(ds.PixelData, 1))
+    frame = next(generate_frames(ds.PixelData, number_of_frames=1))
     arr = decode(frame, reshape=True)
     assert arr.shape == (256, 256, 3)
 
@@ -168,7 +168,7 @@ class TestDecodeDCM:
     def generate_frames(self, ds):
         """Return a generator object with the dataset's pixel data frames."""
         nr_frames = ds.get("NumberOfFrames", 1)
-        return generate_pixel_data_frame(ds.PixelData, nr_frames)
+        return generate_frames(ds.PixelData, number_of_frames=nr_frames)
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.50"])
     def test_baseline(self, fname, info):
@@ -298,7 +298,7 @@ class TestDecodeDCM:
         assert 0xC000 == item["Status"][1]
         ds = item["ds"]
         nr_frames = ds.get("NumberOfFrames", 1)
-        frame = next(generate_pixel_data_frame(ds.PixelData, nr_frames))
+        frame = next(generate_frames(ds.PixelData, number_of_frames=nr_frames))
         msg = (
             r"libjpeg error code '-1038' returned from Decode\(\): A "
             r"misplaced marker segment was found - scan start must be zero "
