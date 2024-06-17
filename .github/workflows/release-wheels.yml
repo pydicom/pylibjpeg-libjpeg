@@ -115,19 +115,19 @@ jobs:
             platform_id: manylinux_aarch64
 
           # MacOS x86_64
-          - os: macos-latest
+          - os: macos-12
             python: 38
             platform_id: macosx_x86_64
-          - os: macos-latest
+          - os: macos-12
             python: 39
             platform_id: macosx_x86_64
-          - os: macos-latest
+          - os: macos-12
             python: 310
             platform_id: macosx_x86_64
-          - os: macos-latest
+          - os: macos-12
             python: 311
             platform_id: macosx_x86_64
-          - os: macos-latest
+          - os: macos-12
             python: 312
             platform_id: macosx_x86_64
 
@@ -178,19 +178,19 @@ jobs:
       matrix:
         include:
         # MacOS arm64
-        - os: macos-latest
+        - os: macos-14
           python: 38
           platform_id: macosx_arm64
-        - os: macos-latest
+        - os: macos-14
           python: 39
           platform_id: macosx_arm64
-        - os: macos-latest
+        - os: macos-14
           python: 310
           platform_id: macosx_arm64
-        - os: macos-latest
+        - os: macos-14
           python: 311
           platform_id: macosx_arm64
-        - os: macos-latest
+        - os: macos-14
           python: 312
           platform_id: macosx_arm64
 
@@ -214,13 +214,6 @@ jobs:
         CIBW_BUILD_VERBOSITY: 1
       run: |
         python -m cibuildwheel --output-dir dist
-
-    # Cross compiling wheels for arm64 with poetry creates wheels with wrong tag
-    # Update the wheel with the correct tag then remove the incorrect wheel
-    - name: Fix poetry mistagging
-      run: |
-        wheel tags --platform-tag macosx_12_0_arm64 ./dist/*-macosx_12_0_x86_64.whl
-        rm ./dist/*-macosx_12_0_x86_64.whl
 
     - name: Store artifacts
       uses: actions/upload-artifact@v4

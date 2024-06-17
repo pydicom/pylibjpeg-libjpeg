@@ -3,8 +3,8 @@
 import pytest
 
 try:
-    from pydicom.pixel_data_handlers.util import convert_color_space
-    from pydicom.encaps import defragment_data
+    from pydicom.pixels import convert_color_space
+    from pydicom.encaps import generate_frames
 
     HAS_PYDICOM = True
 except ImportError:
@@ -70,7 +70,7 @@ class TestLibrary:
         ds_list = get_indexed_datasets("1.2.840.10008.1.2.4.50")
         # Image has invalid Se value in the SOS marker segment
         ds = ds_list["color3d_jpeg_baseline.dcm"]["ds"]
-        data = defragment_data(ds.PixelData)
+        data = next(generate_frames(ds.PixelData, number_of_frames=1))
         msg = (
             r"Unknown error code '-8194' returned from Decode\(\): "
             r"Invalid colourTransform value"
@@ -129,8 +129,6 @@ class TestJPEGBaseline(HandlerTestBase):
         assert "uint8" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
-        # self.plot(arr, cmap='gray')
-
         # Reference values from GDCM handler
         assert 76 == arr[5, 50]
         assert 167 == arr[15, 50]
@@ -173,12 +171,11 @@ class TestJPEGBaseline(HandlerTestBase):
         assert 8 == ds.BitsAllocated == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(raw=True)
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "uint8" == arr.dtype
         assert (ds.Rows, ds.Columns, 3) == arr.shape
-
-        # self.plot(arr)
 
         # Reference values may be slightly different depending on handler
         # Pillow: assert ( 76,  86, 251) == tuple(arr[ 5, 50, :])
@@ -218,9 +215,6 @@ class TestJPEGBaseline(HandlerTestBase):
 
         # Gives a MemoryError in GitHub CI build otherwise
         arr = arr[0:10, ...]
-        arr = convert_color_space(arr, "YBR_FULL", "RGB")
-
-        # self.plot(arr, index=3)
 
         # GDCM: all match
         assert (41, 41, 41) == tuple(arr[3, 159, 290, :])
@@ -275,10 +269,6 @@ class TestJPEGBaseline(HandlerTestBase):
         assert "uint8" == arr.dtype
         assert (ds.Rows, ds.Columns, 3) == arr.shape
 
-        arr = convert_color_space(arr, "YBR_FULL", "RGB")
-
-        # self.plot(arr)
-
         # GDCM: all match
         # Pillow: assert (248,   3,   2) == tuple(arr[ 5, 50, :])
         assert (253, 1, 0) == tuple(arr[5, 50, :])
@@ -311,10 +301,6 @@ class TestJPEGBaseline(HandlerTestBase):
         assert arr.flags.writeable
         assert "uint8" == arr.dtype
         assert (ds.Rows, ds.Columns, 3) == arr.shape
-
-        arr = convert_color_space(arr, "YBR_FULL", "RGB")
-
-        # self.plot(arr)
 
         assert (254, 0, 0) == tuple(arr[5, 50, :])
         assert (255, 127, 127) == tuple(arr[15, 50, :])
@@ -440,12 +426,11 @@ class TestJPEGExtended(HandlerTestBase):
         assert 8 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(raw=True)
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "uint8" == arr.dtype
         assert (ds.Rows, ds.Columns, 3) == arr.shape
-
-        # self.plot(arr)
 
         # Reference values from GDCM handler - in YBR colour space
         assert [
@@ -1009,8 +994,8 @@ class TestJPEG2000Lossless(HandlerTestBase):
         assert 1 == ds.PixelRepresentation
 
         msg = (
-            r"Unable to convert the Pixel Data as the 'pylibjpeg-openjpeg' "
-            r"plugin is not installed"
+            r"Unable to decompress 'JPEG 2000 Image Compression \(Lossless Only\)' "
+            "pixel data because all plugins are missing dependencies"
         )
         with pytest.raises(RuntimeError, match=msg):
             ds.pixel_array
@@ -1037,8 +1022,8 @@ class TestJPEG2000(HandlerTestBase):
         assert 1 == ds.PixelRepresentation
 
         msg = (
-            r"Unable to convert the Pixel Data as the 'pylibjpeg-openjpeg' "
-            r"plugin is not installed"
+            r"Unable to decompress 'JPEG 2000 Image Compression' "
+            "pixel data because all plugins are missing dependencies"
         )
         with pytest.raises(RuntimeError, match=msg):
             ds.pixel_array
