@@ -3,9 +3,9 @@ name: release-deploy
 on:
   release:
     types: [ published ]
-  # push:
-  #   branches: [ main ]
-  # pull_request:
+  push:
+    branches: [ main ]
+  pull_request:
 
 jobs:
   build-sdist:
@@ -274,22 +274,22 @@ jobs:
   # The pypi upload fails with non-linux containers, so grab the uploaded
   #     artifacts and run using those
   # See: https://github.com/pypa/gh-action-pypi-publish/discussions/15
-  deploy:
-    name: Upload wheels to PyPI
-    needs: [ test-package ]
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/project/pylibjpeg-libjpeg/
-    permissions:
-      id-token: write
-
-    steps:
-    - name: Download the wheels
-      uses: actions/download-artifact@v4
-      with:
-        path: dist/
-        merge-multiple: true
-
-    - name: Publish package to PyPi
-      uses: pypa/gh-action-pypi-publish@release/v1
+  # deploy:
+  #   name: Upload wheels to PyPI
+  #   needs: [ test-package ]
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: pypi
+  #     url: https://pypi.org/project/pylibjpeg-libjpeg/
+  #   permissions:
+  #     id-token: write
+  #
+  #   steps:
+  #   - name: Download the wheels
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       path: dist/
+  #       merge-multiple: true
+  #
+  #   - name: Publish package to PyPi
+  #     uses: pypa/gh-action-pypi-publish@release/v1
