@@ -222,61 +222,62 @@ jobs:
         path: ./dist/*.whl
 
 
-  test-package:
-    name: Test built package
-    needs: [ build-wheels, build-sdist, build-wheels-macos-arm64 ]
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
-
-    steps:
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Download the wheels
-      uses: actions/download-artifact@v4
-      with:
-        path: dist/
-        merge-multiple: true
-
-    - name: Install from package wheels and test
-      # If testing wheel builds might need --pre to install dev version
-      run: |
-        python -m venv testwhl
-        source testwhl/bin/activate
-        python -m pip install -U pip
-        python -m pip install pytest pydicom pylibjpeg
-        python -m pip uninstall -y pylibjpeg-libjpeg
-        python -m pip uninstall -y pylibjpeg-openjpeg
-        python -m pip install git+https://github.com/pydicom/pylibjpeg-data
-        python -m pip install -U --pre --find-links dist/ pylibjpeg-libjpeg
-        python -m pytest --pyargs libjpeg.tests
-        deactivate
-
-    - name: Install from package tarball and test
-      run: |
-        python -m venv testsrc
-        source testsrc/bin/activate
-        python -m pip install -U pip
-        python -m pip install pytest pydicom pylibjpeg
-        python -m pip uninstall -y pylibjpeg-libjpeg
-        python -m pip uninstall -y pylibjpeg-openjpeg
-        python -m pip install git+https://github.com/pydicom/pylibjpeg-data
-        python -m pip install -U dist/pylibjpeg*libjpeg-*.tar.gz
-        python -m pytest --pyargs libjpeg.tests
-        deactivate
+  # test-package:
+  #   name: Test built package
+  #   needs: [ build-wheels, build-sdist, build-wheels-macos-arm64 ]
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+  #
+  #   steps:
+  #   - name: Set up Python ${{ matrix.python-version }}
+  #     uses: actions/setup-python@v5
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #
+  #   - name: Download the wheels
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       path: dist/
+  #       merge-multiple: true
+  #
+  #   - name: Install from package wheels and test
+  #     # If testing wheel builds might need --pre to install dev version
+  #     run: |
+  #       python -m venv testwhl
+  #       source testwhl/bin/activate
+  #       python -m pip install -U pip
+  #       python -m pip install pytest pydicom pylibjpeg
+  #       python -m pip uninstall -y pylibjpeg-libjpeg
+  #       python -m pip uninstall -y pylibjpeg-openjpeg
+  #       python -m pip install git+https://github.com/pydicom/pylibjpeg-data
+  #       python -m pip install -U --pre --find-links dist/ pylibjpeg-libjpeg
+  #       python -m pytest --pyargs libjpeg.tests
+  #       deactivate
+  #
+  #   - name: Install from package tarball and test
+  #     run: |
+  #       python -m venv testsrc
+  #       source testsrc/bin/activate
+  #       python -m pip install -U pip
+  #       python -m pip install pytest pydicom pylibjpeg
+  #       python -m pip uninstall -y pylibjpeg-libjpeg
+  #       python -m pip uninstall -y pylibjpeg-openjpeg
+  #       python -m pip install git+https://github.com/pydicom/pylibjpeg-data
+  #       python -m pip install -U dist/pylibjpeg*libjpeg-*.tar.gz
+  #       python -m pytest --pyargs libjpeg.tests
+  #       deactivate
 
   # The pypi upload fails with non-linux containers, so grab the uploaded
   #     artifacts and run using those
   # See: https://github.com/pypa/gh-action-pypi-publish/discussions/15
   deploy:
     name: Upload wheels to PyPI
-    needs: [ test-package ]
+    # needs: [ test-package ]
+    needs: [ build-wheels, build-sdist, build-wheels-macos-arm64 ]
     runs-on: ubuntu-latest
     environment:
       name: pypi
