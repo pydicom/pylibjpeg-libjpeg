@@ -325,9 +325,8 @@ JPG_LONG OStreamHook(struct JPG_Hook *hook, struct JPG_TagItem *tags)
                             // DICOM should always be integer input
                             // Need to byte swap if on a big endian system
                             #ifdef JPG_BIG_ENDIAN
-                                ULONG count = width * height * omm->omm_usDepth;
                                 if (omm->omm_ucPixelType == CTYP_UWORD) {
-                                    // ULONG count = width * height * omm->omm_usDepth;
+                                    ULONG count = width * height * omm->omm_usDepth;
                                     UWORD *data = (UWORD *)omm->omm_pMemPtr;
 
                                     do {
@@ -339,10 +338,10 @@ JPG_LONG OStreamHook(struct JPG_Hook *hook, struct JPG_TagItem *tags)
 
                             // Write the decoded data to the output
                             // For each pixel
-                            ULONG count2 = width * height * omm->omm_usDepth;
+                            ULONG count = width * height * omm->omm_usDepth;
                             ULONG size = omm->omm_ucPixelType & CTYP_SIZE_MASK;
                             UBYTE *mem = (UBYTE *)(omm->omm_pMemPtr);
-                            for (ULONG ii = 1; ii <= count2; ii++) {
+                            for (ULONG ii = 1; ii <= count; ii++) {
                                 // For each byte of the pixel
                                 for (ULONG jj = 1; jj <= size; jj++) {
                                     if (out->position >= out->length) {

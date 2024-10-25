@@ -1,5 +1,6 @@
 """Tests for the pylibjpeg pixel data handler."""
 
+import sys
 import pytest
 
 try:
@@ -182,15 +183,22 @@ class TestJPEGBaseline(HandlerTestBase):
         assert (76, 85, 254) == tuple(arr[5, 50, :])
         # GDCM:   assert (166, 109, 190) == tuple(arr[15, 50, :])
         # Pillow: assert (166, 112, 185) == tuple(arr[15, 50, :])
-        assert (166, 108, 190) == tuple(arr[15, 50, :])
+        if sys.byteorder == "big":
+            assert (166, 109, 190) == tuple(arr[15, 50, :])
+            assert (203, 85, 74) == tuple(arr[35, 50, :])
+            assert (29, 255, 108) == tuple(arr[45, 50, :])
+        else:
+            assert (166, 108, 190) == tuple(arr[15, 50, :])
+            # GDCM:   assert (203,  85,  74) == tuple(arr[35, 50, :])
+            # Pillow: assert (203,  95,  75) == tuple(arr[35, 50, :])
+            assert (203, 86, 74) == tuple(arr[35, 50, :])
+            # GDCM:   assert ( 29, 255, 108) == tuple(arr[45, 50, :])
+            # Pillow: assert ( 29, 255, 109) == tuple(arr[45, 50, :])
+            assert (29, 255, 107) == tuple(arr[45, 50, :])
+
         # Pillow: assert (150,  46,  17) == tuple(arr[25, 50, :])
         assert (150, 46, 21) == tuple(arr[25, 50, :])
-        # GDCM:   assert (203,  85,  74) == tuple(arr[35, 50, :])
-        # Pillow: assert (203,  95,  75) == tuple(arr[35, 50, :])
-        assert (203, 86, 74) == tuple(arr[35, 50, :])
-        # GDCM:   assert ( 29, 255, 108) == tuple(arr[45, 50, :])
-        # Pillow: assert ( 29, 255, 109) == tuple(arr[45, 50, :])
-        assert (29, 255, 107) == tuple(arr[45, 50, :])
+
         # Pillow: assert (142, 189, 118) == tuple(arr[55, 50, :])
         assert (142, 192, 117) == tuple(arr[55, 50, :])
         assert (0, 128, 128) == tuple(arr[65, 50, :])
@@ -220,7 +228,10 @@ class TestJPEGBaseline(HandlerTestBase):
         assert (41, 41, 41) == tuple(arr[3, 159, 290, :])
         assert (57, 57, 57) == tuple(arr[3, 169, 290, :])
         # Pillow: assert (71, 168, 125) == tuple(arr[3, 41, 380, :])
-        assert (72, 167, 125) == tuple(arr[3, 41, 380, :])
+        if sys.byteorder == "big":
+            assert (72, 167, 123) == tuple(arr[3, 41, 380, :])
+        else:
+            assert (72, 167, 125) == tuple(arr[3, 41, 380, :])
 
     # Non-conformant datasets
     def test_3s_1f_rgb_non(self):
@@ -273,11 +284,17 @@ class TestJPEGBaseline(HandlerTestBase):
         # Pillow: assert (248,   3,   2) == tuple(arr[ 5, 50, :])
         assert (253, 1, 0) == tuple(arr[5, 50, :])
         # Pillow: assert (246, 131, 138) == tuple(arr[15, 50, :])
-        assert (253, 129, 131) == tuple(arr[15, 50, :])
-        # Pillow: assert (129, 252, 145) == tuple(arr[35, 50, :])
-        assert (127, 255, 129) == tuple(arr[35, 50, :])
-        # Pillow: assert (  2,   0, 254) == tuple(arr[45, 50, :])
-        assert (0, 0, 254) == tuple(arr[45, 50, :])
+        if sys.byteorder == "big":
+            assert (253, 128, 132) == tuple(arr[15, 50, :])
+            assert (127, 255, 127) == tuple(arr[35, 50, :])
+            assert (1, 0, 254) == tuple(arr[45, 50, :])
+        else:
+            assert (253, 129, 131) == tuple(arr[15, 50, :])
+            # Pillow: assert (129, 252, 145) == tuple(arr[35, 50, :])
+            assert (127, 255, 129) == tuple(arr[35, 50, :])
+            # Pillow: assert (  2,   0, 254) == tuple(arr[45, 50, :])
+            assert (0, 0, 254) == tuple(arr[45, 50, :])
+
         # Pillow: assert (128, 128, 250) == tuple(arr[55, 50, :])
         assert (127, 128, 255) == tuple(arr[55, 50, :])
         assert (0, 0, 0) == tuple(arr[65, 50, :])
@@ -372,7 +389,7 @@ class TestJPEGExtended(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -397,7 +414,7 @@ class TestJPEGExtended(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -518,7 +535,7 @@ class TestJPEGLossless(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -624,7 +641,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -647,7 +664,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -668,7 +685,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -691,7 +708,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "int16" == arr.dtype
+        assert "<i2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -794,7 +811,7 @@ class TestJPEGLSLossless(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "int16" == arr.dtype
+        assert "<i2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr, cmap='gray')
@@ -817,7 +834,7 @@ class TestJPEGLSLossless(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (10, ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr, index=0, cmap='gray')
@@ -892,7 +909,7 @@ class TestJPEGLS(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "int16" == arr.dtype
+        assert "<i2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -915,7 +932,7 @@ class TestJPEGLS(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -938,7 +955,7 @@ class TestJPEGLS(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)
@@ -961,7 +978,7 @@ class TestJPEGLS(HandlerTestBase):
 
         arr = ds.pixel_array
         assert arr.flags.writeable
-        assert "uint16" == arr.dtype
+        assert "<u2" == arr.dtype
         assert (ds.Rows, ds.Columns) == arr.shape
 
         # self.plot(arr)

@@ -132,7 +132,7 @@ def decode(
     if code == 0 and reshape:
         bpp = ceil(params["precision"] / 8)
         if bpp == 2:
-            out = out.view("uint16")
+            out = out.view("<u2")
 
         shape = [params["rows"], params["columns"]]
         if params["nr_components"] > 1:
