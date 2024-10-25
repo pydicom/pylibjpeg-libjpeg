@@ -188,7 +188,7 @@ class TestDecodeDCM:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.51"])
     def test_extended(self, fname, info):
@@ -208,7 +208,7 @@ class TestDecodeDCM:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.57"])
     def test_lossless(self, fname, info):
@@ -228,7 +228,7 @@ class TestDecodeDCM:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.70"])
     def test_lossless_sv1(self, fname, info):
@@ -248,7 +248,7 @@ class TestDecodeDCM:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.80"])
     def test_jls_lossless(self, fname, info):
@@ -268,7 +268,7 @@ class TestDecodeDCM:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
     @pytest.mark.parametrize("fname, info", REF_DCM["1.2.840.10008.1.2.4.81"])
     def test_jls(self, fname, info):
@@ -288,7 +288,7 @@ class TestDecodeDCM:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
     def test_v2_non_conformant_raises(self):
         """Test that a non-conformant JPEG image raises an exception."""
@@ -515,7 +515,7 @@ class TestDecodeJPG:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
         assert ref[0] == arr[0, 0, :].tolist()
         assert ref[1] == arr[-1, -1, :].tolist()
@@ -538,7 +538,7 @@ class TestDecodeJPG:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
         assert ref[0] == arr[0, 0, :].tolist()
         assert ref[1] == arr[-1, -1, :].tolist()
@@ -561,7 +561,7 @@ class TestDecodeJPG:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
         if info[2] == 1:
             assert ref[0] == arr[0, 0].tolist()
@@ -588,7 +588,7 @@ class TestDecodeJPG:
         if 1 <= info[3] <= 8:
             assert arr.dtype == "uint8"
         if 9 <= info[3] <= 16:
-            assert arr.dtype == "uint16"
+            assert arr.dtype == "<u2"
 
         if info[2] == 1:
             assert ref[0] == arr[0, 0].tolist()

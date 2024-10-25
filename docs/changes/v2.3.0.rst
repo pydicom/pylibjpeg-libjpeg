@@ -1,0 +1,7 @@
+.. _v2.3.0:
+
+2.3.0
+=====
+
+* Supported Python versions are 3.9 to 3.13
+* Added support for decoding on big endian systems

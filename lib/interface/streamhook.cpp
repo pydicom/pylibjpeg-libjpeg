@@ -88,7 +88,7 @@ JPG_LONG OStreamHook(struct JPG_Hook *hook, struct JPG_TagItem *tags)
     static ULONG OpenComponents = 0;
     struct StreamMemory *omm  = (struct StreamMemory *)(hook->hk_pData);
     struct StreamData *out = (struct StreamData *)(omm->omm_pTarget);
-    // Pointer to the output numpy array, currently at offset out->position
+    // Pointer to the output bytearray/numpy array, currently at offset out->position
     char *oArray = (char *)(out->pData);
 
     UWORD comp  = tags->GetTagData(JPGTAG_BIO_COMPONENT);
@@ -323,11 +323,24 @@ JPG_LONG OStreamHook(struct JPG_Hook *hook, struct JPG_TagItem *tags)
                             }
                         } else {
                             // DICOM should always be integer input
-                            // Write pixel data to target
-                            ULONG size = omm->omm_ucPixelType & CTYP_SIZE_MASK;
-                            ULONG count = width * height * omm->omm_usDepth;
-                            UBYTE *mem = (UBYTE *)(omm->omm_pMemPtr);
+                            // Need to byte swap if on a big endian system
+                            #ifdef JPG_BIG_ENDIAN
+                                if (omm->omm_ucPixelType == CTYP_UWORD) {
+                                    ULONG count = width * height * omm->omm_usDepth;
+                                    UWORD *data = (UWORD *)omm->omm_pMemPtr;
+
+                                    do {
+                                        *data = (*data >> 8) | ((*data & 0xff) << 8);
+                                        data++;
+                                    } while(--count);
+                                }
+                            #endif
+
+                            // Write the decoded data to the output
                             // For each pixel
+                            ULONG count = width * height * omm->omm_usDepth;
+                            ULONG size = omm->omm_ucPixelType & CTYP_SIZE_MASK;
+                            UBYTE *mem = (UBYTE *)(omm->omm_pMemPtr);
                             for (ULONG ii = 1; ii <= count; ii++) {
                                 // For each byte of the pixel
                                 for (ULONG jj = 1; jj <= size; jj++) {
