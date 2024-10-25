@@ -30,11 +30,11 @@ std::string Decode(
     Parameters
     ----------
     char *inArray
-        Pointer to the first element of a numpy.ndarray containing the JPEG
-        data to be decompressed.
+        Pointer to the first element of a bytearray or numpy.ndarray containing the
+        JPEG data to be decompressed.
     char *outArray
-        Pointer to the first element of a numpy.ndarray where the decompressed
-        JPEG data should be written.
+        Pointer to the first element of bytearray or numpy.ndarray where the
+        decompressed JPEG data should be written.
     int inLength
         Length of the input array
     int outLength

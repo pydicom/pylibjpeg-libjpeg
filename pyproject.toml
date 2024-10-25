@@ -22,11 +22,11 @@ classifiers=[
     "Development Status :: 5 - Production/Stable",
     "Natural Language :: English",
     "Programming Language :: C++",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: POSIX :: Linux",
     "Operating System :: Microsoft :: Windows",
@@ -56,11 +56,11 @@ packages = [
     { include = "libjpeg" },
 ]
 readme = "README.md"
-version = "2.2.0"
+version = "2.3.0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-numpy = "*"
+python = "^3.9"
+numpy = "^2.1"
 
 [tool.poetry.plugins."pylibjpeg.jpeg_decoders"]
 libjpeg = "libjpeg:decode"
@@ -86,7 +86,7 @@ omit = [
 ]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 files = "libjpeg"
 exclude = ["libjpeg/tests"]
 show_error_codes = true

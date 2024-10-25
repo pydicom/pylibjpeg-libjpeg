@@ -1,0 +1,13 @@
+.. _v2.1.0:
+
+2.1.0
+=====
+
+* Use ``libjpeg`` v1.67
+* Fixed a decoding failure for JPEG 10918 file with an Adobe v101 APP14 marker
+
+2.1.1
+=====
+
+* Updated dependencies to allow NumPy > 2.0
+* Tests updated to use ``pydicom.pixels``

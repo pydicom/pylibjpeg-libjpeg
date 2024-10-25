@@ -1,0 +1,6 @@
+.. _v2.2.0:
+
+2.2.0
+=====
+
+* Support NumPy > 2.0 with Python 3.9+

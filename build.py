@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+from struct import unpack
 import subprocess
 import sys
 from typing import Any, List, Dict
@@ -33,8 +34,16 @@ def build(setup_kwargs: Any) -> Any:
         # Skip configuration if running with `sdist`
         if 'sdist' not in sys.argv:
             opts = get_gcc_args()
+            if sys.byteorder == "big":
+                if "-mfpmath=387" in opts["ADDOPTS"]:
+                    opts["ADDOPTS"].remove("-mfpmath=387")
+
             extra_compile_args += opts['ADDOPTS']
             extra_link_args += opts['EXTRA_LIBS']
+
+    macros = [("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
+    if unpack("h", b"\x00\x01")[0] == 1:
+        macros.append(("JPG_BIG_ENDIAN", "1"))
 
     ext = Extension(
         '_libjpeg',
@@ -47,6 +56,7 @@ def build(setup_kwargs: Any) -> Any:
         ],
         extra_compile_args=extra_compile_args,
         extra_link_args=extra_link_args,
+        define_macros=macros,
     )
 
     ext_modules = cythonize(
