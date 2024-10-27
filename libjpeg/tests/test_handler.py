@@ -64,6 +64,7 @@ class TestLibrary:
             r"and scan stop must be 63 for the sequential operating modes"
         )
         with pytest.raises(RuntimeError, match=msg):
+            item["ds"].pixel_array_options(decoding_plugin="pylibjpeg")
             item["ds"].pixel_array
 
     def test_invalid_colour_transform(self, add_invalid_colour):
@@ -387,6 +388,7 @@ class TestJPEGExtended(HandlerTestBase):
         assert 10 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -412,6 +414,7 @@ class TestJPEGExtended(HandlerTestBase):
         assert 12 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -443,7 +446,7 @@ class TestJPEGExtended(HandlerTestBase):
         assert 8 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
-        ds.pixel_array_options(raw=True)
+        ds.pixel_array_options(raw=True, decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "uint8" == arr.dtype
@@ -533,6 +536,7 @@ class TestJPEGLossless(HandlerTestBase):
         assert 12 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -617,6 +621,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
         assert 8 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "uint8" == arr.dtype
@@ -639,6 +644,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
         assert 10 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -662,6 +668,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
         assert 12 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -683,6 +690,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
         assert 15 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -706,6 +714,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
         assert 16 == ds.BitsStored
         assert 1 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<i2" == arr.dtype
@@ -728,6 +737,7 @@ class TestJPEGLosslessSV1(HandlerTestBase):
         assert 8 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "uint8" == arr.dtype
@@ -809,6 +819,7 @@ class TestJPEGLSLossless(HandlerTestBase):
         assert 16 == ds.BitsStored
         assert 1 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<i2" == arr.dtype
@@ -832,6 +843,7 @@ class TestJPEGLSLossless(HandlerTestBase):
         assert 12 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -907,6 +919,7 @@ class TestJPEGLS(HandlerTestBase):
         assert 16 == ds.BitsStored
         assert 1 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<i2" == arr.dtype
@@ -930,6 +943,7 @@ class TestJPEGLS(HandlerTestBase):
         assert 10 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -953,6 +967,7 @@ class TestJPEGLS(HandlerTestBase):
         assert 12 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -976,6 +991,7 @@ class TestJPEGLS(HandlerTestBase):
         assert 15 == ds.BitsStored
         assert 0 == ds.PixelRepresentation
 
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         arr = ds.pixel_array
         assert arr.flags.writeable
         assert "<u2" == arr.dtype
@@ -1012,8 +1028,9 @@ class TestJPEG2000Lossless(HandlerTestBase):
 
         msg = (
             r"Unable to decompress 'JPEG 2000 Image Compression \(Lossless Only\)' "
-            "pixel data because all plugins are missing dependencies"
+            "pixel data because the specified plugin is missing dependencies"
         )
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         with pytest.raises(RuntimeError, match=msg):
             ds.pixel_array
 
@@ -1040,7 +1057,8 @@ class TestJPEG2000(HandlerTestBase):
 
         msg = (
             r"Unable to decompress 'JPEG 2000 Image Compression' "
-            "pixel data because all plugins are missing dependencies"
+            "pixel data because the specified plugin is missing dependencies"
         )
+        ds.pixel_array_options(decoding_plugin="pylibjpeg")
         with pytest.raises(RuntimeError, match=msg):
             ds.pixel_array
