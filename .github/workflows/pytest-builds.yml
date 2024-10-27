@@ -1,9 +1,9 @@
 name: unit-tests
 
 on:
-  # push:
-  #   branches: [ main ]
-  # pull_request:
+  push:
+    branches: [ main ]
+  pull_request:
 
 jobs:
   windows:
