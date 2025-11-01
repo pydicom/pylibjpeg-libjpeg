@@ -239,7 +239,7 @@ jobs:
   #       python-version: ${{ matrix.python-version }}
   #
   #   - name: Download the wheels
-  #     uses: actions/download-artifact@v5
+  #     uses: actions/download-artifact@v6
   #     with:
   #       path: dist/
   #       merge-multiple: true
@@ -287,7 +287,7 @@ jobs:
 
     steps:
     - name: Download the wheels
-      uses: actions/download-artifact@v5
+      uses: actions/download-artifact@v6
       with:
         path: dist/
         merge-multiple: true
