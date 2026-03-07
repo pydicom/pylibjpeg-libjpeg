@@ -42,92 +42,92 @@ jobs:
       matrix:
         include:
           # Windows 32 bit
-          - os: windows-latest
-            python: 310
-            platform_id: win32
-          - os: windows-latest
-            python: 311
-            platform_id: win32
-          - os: windows-latest
-            python: 312
-            platform_id: win32
-          - os: windows-latest
-            python: 313
-            platform_id: win32
-          - os: windows-latest
-            python: 314
-            platform_id: win32
+          # - os: windows-latest
+          #   python: 310
+          #   platform_id: win32
+          # - os: windows-latest
+          #   python: 311
+          #   platform_id: win32
+          # - os: windows-latest
+          #   python: 312
+          #   platform_id: win32
+          # - os: windows-latest
+          #   python: 313
+          #   platform_id: win32
+          # - os: windows-latest
+          #   python: 314
+          #   platform_id: win32
 
           # Windows 64 bit
-          - os: windows-latest
-            python: 310
-            platform_id: win_amd64
-          - os: windows-latest
-            python: 311
-            platform_id: win_amd64
-          - os: windows-latest
-            python: 312
-            platform_id: win_amd64
-          - os: windows-latest
-            python: 313
-            platform_id: win_amd64
-          - os: windows-latest
-            python: 314
-            platform_id: win_amd64
+          # - os: windows-latest
+          #   python: 310
+          #   platform_id: win_amd64
+          # - os: windows-latest
+          #   python: 311
+          #   platform_id: win_amd64
+          # - os: windows-latest
+          #   python: 312
+          #   platform_id: win_amd64
+          # - os: windows-latest
+          #   python: 313
+          #   platform_id: win_amd64
+          # - os: windows-latest
+          #   python: 314
+          #   platform_id: win_amd64
 
           # Linux 64 bit manylinux2014
-          - os: ubuntu-latest
-            python: 310
-            platform_id: manylinux_x86_64
-            manylinux_image: manylinux2014
-          - os: ubuntu-latest
-            python: 311
-            platform_id: manylinux_x86_64
-            manylinux_image: manylinux2014
-          - os: ubuntu-latest
-            python: 312
-            platform_id: manylinux_x86_64
-            manylinux_image: manylinux2014
-          - os: ubuntu-latest
-            python: 313
-            platform_id: manylinux_x86_64
-            manylinux_image: manylinux2014
-          - os: ubuntu-latest
-            python: 314
-            platform_id: manylinux_x86_64
-            manylinux_image: manylinux2014
+          # - os: ubuntu-latest
+          #   python: 310
+          #   platform_id: manylinux_x86_64
+          #   manylinux_image: manylinux2014
+          # - os: ubuntu-latest
+          #   python: 311
+          #   platform_id: manylinux_x86_64
+          #   manylinux_image: manylinux2014
+          # - os: ubuntu-latest
+          #   python: 312
+          #   platform_id: manylinux_x86_64
+          #   manylinux_image: manylinux2014
+          # - os: ubuntu-latest
+          #   python: 313
+          #   platform_id: manylinux_x86_64
+          #   manylinux_image: manylinux2014
+          # - os: ubuntu-latest
+          #   python: 314
+          #   platform_id: manylinux_x86_64
+          #   manylinux_image: manylinux2014
 
           # Linux aarch64
-          - os: ubuntu-latest
-            python: 310
-            platform_id: manylinux_aarch64
-          - os: ubuntu-latest
-            python: 311
-            platform_id: manylinux_aarch64
-          - os: ubuntu-latest
-            python: 312
-            platform_id: manylinux_aarch64
-          - os: ubuntu-latest
-            python: 313
-            platform_id: manylinux_aarch64
-          - os: ubuntu-latest
-            python: 314
-            platform_id: manylinux_aarch64
+          # - os: ubuntu-latest
+          #   python: 310
+          #   platform_id: manylinux_aarch64
+          # - os: ubuntu-latest
+          #   python: 311
+          #   platform_id: manylinux_aarch64
+          # - os: ubuntu-latest
+          #   python: 312
+          #   platform_id: manylinux_aarch64
+          # - os: ubuntu-latest
+          #   python: 313
+          #   platform_id: manylinux_aarch64
+          # - os: ubuntu-latest
+          #   python: 314
+          #   platform_id: manylinux_aarch64
 
           # MacOS x86_64
-          - os: macos-14-large
+          - os: macos-26-intel
             python: 310
             platform_id: macosx_x86_64
-          - os: macos-14-large
+          - os: macos-26-intel
             python: 311
             platform_id: macosx_x86_64
-          - os: macos-14-large
+          - os: macos-26-intel
             python: 312
             platform_id: macosx_x86_64
-          - os: macos-14-large
+          - os: macos-26-intel
             python: 313
             platform_id: macosx_x86_64
-          - os: macos-14-large
+          - os: macos-26-intel
             python: 314
             platform_id: macosx_x86_64
 
@@ -170,56 +170,56 @@ jobs:
         name: wheel-${{ matrix.python }}-${{ matrix.platform_id }}
         path: ./dist
 
-  build-wheels-macos-arm64:
-    name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        # MacOS arm64
-        - os: macos-14
-          python: 310
-          platform_id: macosx_arm64
-        - os: macos-14
-          python: 311
-          platform_id: macosx_arm64
-        - os: macos-14
-          python: 312
-          platform_id: macosx_arm64
-        - os: macos-14
-          python: 313
-          platform_id: macosx_arm64
-        - os: macos-14
-          python: 314
-          platform_id: macosx_arm64
-
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        submodules: true
-
-    - uses: actions/setup-python@v6
-      name: Install Python
-      with:
-        python-version: '3.11'
-
-    - name: Install cibuildwheel
-      run: python -m pip install cibuildwheel>=3.4 wheel>=0.42
-
-    - name: Build wheels
-      env:
-        CIBW_BUILD: cp${{ matrix.python }}-*
-        CIBW_ARCHS_MACOS: arm64
-        CIBW_BUILD_VERBOSITY: 1
-      run: |
-        python -m cibuildwheel --output-dir dist
-
-    - name: Store artifacts
-      uses: actions/upload-artifact@v7
-      with:
-        name: wheel-${{ matrix.python }}-${{ matrix.platform_id }}
-        path: ./dist/*.whl
+  # build-wheels-macos-arm64:
+  #   name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform_id }}
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #       # MacOS arm64
+  #       - os: macos-14
+  #         python: 310
+  #         platform_id: macosx_arm64
+  #       - os: macos-14
+  #         python: 311
+  #         platform_id: macosx_arm64
+  #       - os: macos-14
+  #         python: 312
+  #         platform_id: macosx_arm64
+  #       - os: macos-14
+  #         python: 313
+  #         platform_id: macosx_arm64
+  #       - os: macos-14
+  #         python: 314
+  #         platform_id: macosx_arm64
+  #
+  #   steps:
+  #   - uses: actions/checkout@v6
+  #     with:
+  #       submodules: true
+  #
+  #   - uses: actions/setup-python@v6
+  #     name: Install Python
+  #     with:
+  #       python-version: '3.11'
+  #
+  #   - name: Install cibuildwheel
+  #     run: python -m pip install cibuildwheel>=3.4 wheel>=0.42
+  #
+  #   - name: Build wheels
+  #     env:
+  #       CIBW_BUILD: cp${{ matrix.python }}-*
+  #       CIBW_ARCHS_MACOS: arm64
+  #       CIBW_BUILD_VERBOSITY: 1
+  #     run: |
+  #       python -m cibuildwheel --output-dir dist
+  #
+  #   - name: Store artifacts
+  #     uses: actions/upload-artifact@v7
+  #     with:
+  #       name: wheel-${{ matrix.python }}-${{ matrix.platform_id }}
+  #       path: ./dist/*.whl
 
 
   # test-package:
