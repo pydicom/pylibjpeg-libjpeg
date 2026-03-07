@@ -1,0 +1,7 @@
+.. _v2.4.0:
+
+2.4.0
+=====
+
+* Added support for Python 3.14 and dropped 3.9
+* Updated to v1.71 of libjpeg

@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
         arch: ['x64', 'x86']
 
     steps:
@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
 
     steps:
     - uses: actions/checkout@v6
@@ -86,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
 
     steps:
     - uses: actions/checkout@v6
@@ -117,7 +117,7 @@ jobs:
         pytest --cov=libjpeg --cov-append libjpeg/tests
 
     - name: Switch to pydicom dev and rerun pytest
-      if: ${{ contains('3.10 3.11 3.12 3.13', matrix.python-version) }}
+      if: ${{ contains('3.10 3.11 3.12 3.13 3.14', matrix.python-version) }}
       run: |
         pip uninstall -y pydicom
         pip install git+https://github.com/pydicom/pydicom
