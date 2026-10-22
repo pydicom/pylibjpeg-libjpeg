@@ -1,0 +1,6 @@
+.. _v2.5.0:
+
+2.5.0
+=====
+
+* Added support for Python 3.15
